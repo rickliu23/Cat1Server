@@ -454,11 +454,12 @@ void clsLteBaseIf::KA_StatusArrayInit(void)
 {
     LteKeepAliveStruct keepAliveStatusArray[LET_KEEPALIVE_ARRAY_COUNT] =
     {
-        {0, true, LTE_AT_INDEX_UNKNOW, LTE_AT_READ, 0, 0, 0, 0, 200, false, false, 0, 0, 1, 0}, // disable模块
-        {1, true, LTE_AT_INDEX_UNKNOW, LTE_AT_READ, 0, 0, 0, 0, 5100, false, false, 0, 0, 2, 0}, // enable模块
-        {2, true, LTE_AT_INDEX_AT, LTE_AT_READ, 0, 0, 2, 0, 1100, false, false, 0, 0, 3, 0}, // 尝试发AT
-        {3, true, LTE_AT_INDEX_ECHO, LTE_AT_WRITE, 1, 0, 5, 0, 2000, false, false, 0, 0, 4, 0}, // 打开回显
-        {4, true, LTE_AT_INDEX_SIM_PIN, LTE_AT_READ, 1, 0, 5, 0, 2000, false, false, 0, 5000, 4, 4}, // 查询是否存在sim卡
+      //index   isFirst  cmd                  type           para   tryTimes  reload  timeout   reload   recv   succeed   wait  reload   succeed step,  failed step
+        {0,     true,    LTE_AT_INDEX_UNKNOW,  LTE_AT_READ,    0,     0,        0,      0,       200,     false,  false,    0,     0,       1,          0}, // disable模块
+        {1,     true,    LTE_AT_INDEX_UNKNOW,  LTE_AT_READ,    0,     0,        0,      0,       5100,    false,  false,    0,     0,       2,          0}, // enable模块
+        {2,     true,    LTE_AT_INDEX_AT,      LTE_AT_READ,    0,     0,        2,      0,       1100,    false,  false,    0,     0,       3,          0}, // 尝试发AT
+        {3,     true,    LTE_AT_INDEX_ECHO,    LTE_AT_WRITE,   1,     0,        5,      0,       2000,    false,  false,    0,     0,       4,          0}, // 打开回显
+        {4,     true,    LTE_AT_INDEX_SIM_PIN, LTE_AT_READ,    1,     0,        5,      0,       2000,    false,  false,    0,     5000,    4,          4}, // 查询是否存在sim卡
     };
 
     memcpy(m_keepAliveStatusArray, keepAliveStatusArray, sizeof(keepAliveStatusArray));
@@ -593,7 +594,7 @@ void clsLteBaseIf::KA_MsgProcess(uint8_t *msg, uint32_t len)
             }
         }
         break;
-        
+
         case LTE_AT_INDEX_SIM_PIN:
         {
             pos = my_strstr((char *)msg, len, LTE_AT_SIM_READY_RSP);
