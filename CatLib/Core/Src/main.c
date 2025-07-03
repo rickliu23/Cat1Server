@@ -102,8 +102,8 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
-  uint8_t hello[] = "hello STM32\r\n";
-  HAL_UART_Transmit(&huart1, hello, sizeof(hello), 100);
+//  uint8_t hello[] = "hello STM32\r\n";
+//  HAL_UART_Transmit(&huart1, hello, sizeof(hello), 100);
 
   HW_UART_Start_Recv();
 

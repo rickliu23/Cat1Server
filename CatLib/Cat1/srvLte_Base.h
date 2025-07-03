@@ -7,7 +7,8 @@ extern "C" {
 
 #include "stdbool.h"
 #include "stdint.h"
-
+#include "Fibocom_AT.h"
+    
 class clsLteBaseIf;
 
 typedef void (clsLteBaseIf::*MemberMemberFunPtrTemplate)(void);
@@ -16,9 +17,11 @@ typedef void (clsLteBaseIf::*MemberMemberFunPtrTemplate)(void);
 
 #define LET_RAW_FIFO_MAX             (200)
 
-#define LET_MSG_FIFO_MAX_COUNT       (3)
+#define LET_MSG_FIFO_MAX_COUNT       (5)
 #define LET_MSG_FIFO_MAX_BYTES       (100)
 
+#define LET_KEEPALIVE_ARRAY_COUNT       (4)
+    
 typedef struct
 {
     volatile bool isLock;
@@ -33,7 +36,7 @@ typedef struct
 
     uint8_t msg[LET_MSG_FIFO_MAX_COUNT][LET_MSG_FIFO_MAX_BYTES];
     uint32_t msgLen[LET_MSG_FIFO_MAX_COUNT];
-    int16_t timeout[LET_MSG_FIFO_MAX_COUNT];
+    int16_t timeout[LET_MSG_FIFO_MAX_COUNT]; // for recv, useless
 
     int16_t head;
     int16_t tail;
@@ -46,38 +49,33 @@ typedef struct
     int16_t timeout;
 } LteMsgStateMachine;
 
-typedef enum
-{
-    LTE_ENUM_SM_RESET = 0,
-    LTE_ENUM_SM_IDLE,
-    LTE_ENUM_SM_ECHO,
-    LTE_ENUM_SM_MAX,
-} LTE_Enum_STATEMACHINE_STATUS;
-
-typedef enum
-{
-    LTE_ENUM_MSG_IDLE, // 当前空闲，没有发消息
-    LTE_ENUM_MSG_RECVED, // 收到消息
-    LTE_ENUM_MSG_WAIT_REPLY, // 以发送消息，正在等待回复
-    LTE_ENUM_MSG_TIMEOUT, // 等待消息超时
-} LTE_Enum_MSG_STATUS;
-
-
+#pragma pack(4)
 typedef struct
 {
-    LTE_Enum_STATEMACHINE_STATUS nowStep;
-    MemberMemberFunPtrTemplate nowFunPtr;
-
-    int32_t timeout_ms;
+    int32_t step;
+    bool isFirst;
+    
+    LTE_AT_INDEX cmd;
+    LTE_AT_TYPE type;
+    int32_t para;
+    
     int32_t tryTimes;
+    int32_t reloadTryTimes;
+    
+    int32_t timeout_ms;
+    int32_t reloadTimeout_ms;
+    
+    bool isRecved;
+    bool isSucceed;
 
-    int32_t waitBeformNextNormalStep_ms;
-    LTE_Enum_STATEMACHINE_STATUS nextNormalStep;
+    int32_t timewait_ms;
+    int32_t reloadtimewait_ms;
 
-    int32_t waitBeformNextAbnormalStep_ms;
-    LTE_Enum_STATEMACHINE_STATUS nextAbnormalStep;
-
-} LteBaseLoopStructure;
+    int32_t stepAfterSucceed;
+    int32_t stepAfterFailed;
+    
+} LteKeepAliveStruct;
+#pragma pack()
 
 class clsLteBaseIf
 {
@@ -146,9 +144,16 @@ private:
     // 拆包完成后，一律通过该函数来存放消息
     bool Msg_PushToRecvQueue(uint8_t *msg, uint32_t len);
 
-private:
 
-    void PushMsgToBaseStateMachine(uint8_t *msg, uint32_t len);
+private:
+    uint32_t m_nowStep;
+    LteKeepAliveStruct m_keepAliveStatusArray[LET_KEEPALIVE_ARRAY_COUNT];
+
+    void KA_StatusArrayInit(void);
+
+    void KA_StateMachine(uint32_t t_ms);
+
+    void KA_MsgProcess(uint8_t *msg, uint32_t len);
 
     //void PushMsgToMQTT(uint8_t *msg, uint32_t len);
 

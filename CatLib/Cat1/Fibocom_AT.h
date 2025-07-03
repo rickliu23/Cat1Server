@@ -7,7 +7,20 @@ extern "C" {
 
 #include "stdbool.h"
 
+    
+extern char LTE_AT_AT[];
+    
+    
+    
+/************************* RSP *************************/
 
+extern char LTE_AT_OK_RSP[];
+extern char LTE_AT_ERR_RSP[];
+
+extern char LTE_AT_MODULE_READY_RSP[];
+extern char LTE_AT_SIM_READY_RSP[];
+    
+    
 typedef enum _LTE_AT_TYPE
 {
     LTE_AT_READ,
@@ -19,7 +32,9 @@ typedef enum _LTE_AT_TYPE
 
 typedef enum _LTE_AT_INDEX
 {
-    LTE_AT_INDEX_AT,
+    LTE_AT_INDEX_UNKNOW = 0,
+
+    LTE_AT_INDEX_AT = 1,
     // LTE_AT_INDEX_INFO,
     LTE_AT_INDEX_ECHO,
 
@@ -71,8 +86,6 @@ typedef enum _LTE_AT_INDEX
     // LTE_AT_INDEX_DNS,
     LTE_AT_INDEX_NUM
 } LTE_AT_INDEX;
-
-
 
 
 bool Fibocom_AT_Assemble_Basic(LTE_AT_INDEX id, LTE_AT_TYPE type, int param, char cmdBuf[], int bufMaxLen, int *usefulLen);

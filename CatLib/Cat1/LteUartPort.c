@@ -1,5 +1,6 @@
 #include "LteUartPort.h"
-
+#include <stdio.h>
+#include <string.h>
 
 #define HW_UART_TIMEOUT         (100)
 
@@ -68,4 +69,14 @@ bool HW_DEBUG_Transmit(uint8_t *pData, uint16_t len)
     HAL_UART_Transmit(&huart1, pData, len, HW_UART_TIMEOUT);
 
     return true;
+}
+
+void HW_Printf(char *info)
+{
+    int len = strlen(info);
+    
+    for(int i = 0; i < len; i++)
+    {
+        HW_DEBUG_Transmit((uint8_t *)(info + i), 1);
+    }
 }
