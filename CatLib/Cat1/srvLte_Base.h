@@ -20,7 +20,7 @@ typedef void (clsLteBaseIf::*MemberMemberFunPtrTemplate)(void);
 #define LET_MSG_FIFO_MAX_COUNT       (5)
 #define LET_MSG_FIFO_MAX_BYTES       (100)
 
-#define LET_KEEPALIVE_ARRAY_COUNT       (4)
+#define LET_KEEPALIVE_ARRAY_COUNT       (10)
 
 typedef struct
 {

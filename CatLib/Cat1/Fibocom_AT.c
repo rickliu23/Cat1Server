@@ -14,17 +14,12 @@ char LTE_AT_MODULE_READY_RSP[] = "AT command ready";
 
 char LTE_AT_OK_RSP[] = "OK";
 char LTE_AT_ERR_RSP[] = "ERROR";
-
-
 char LTE_AT_SIM_READY_RSP[] = "READY";//"+SIM READY";
 
 /************************* Basic CMD *************************/
 char LTE_AT_AT[] = "AT";
 char LTE_AT_ECHO[] = "E";
-
 char LTE_AT_SIM_PIN[] = "CPIN";
-
-
 char LTE_AT_CSQ[] = "CSQ";
 
 
