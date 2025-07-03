@@ -74,7 +74,7 @@ bool HW_DEBUG_Transmit(uint8_t *pData, uint16_t len)
 void HW_Printf(char *info)
 {
     int len = strlen(info);
-    
+
     for(int i = 0; i < len; i++)
     {
         HW_DEBUG_Transmit((uint8_t *)(info + i), 1);

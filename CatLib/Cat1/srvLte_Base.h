@@ -8,7 +8,7 @@ extern "C" {
 #include "stdbool.h"
 #include "stdint.h"
 #include "Fibocom_AT.h"
-    
+
 class clsLteBaseIf;
 
 typedef void (clsLteBaseIf::*MemberMemberFunPtrTemplate)(void);
@@ -21,7 +21,7 @@ typedef void (clsLteBaseIf::*MemberMemberFunPtrTemplate)(void);
 #define LET_MSG_FIFO_MAX_BYTES       (100)
 
 #define LET_KEEPALIVE_ARRAY_COUNT       (4)
-    
+
 typedef struct
 {
     volatile bool isLock;
@@ -54,17 +54,17 @@ typedef struct
 {
     int32_t step;
     bool isFirst;
-    
+
     LTE_AT_INDEX cmd;
     LTE_AT_TYPE type;
     int32_t para;
-    
+
     int32_t tryTimes;
     int32_t reloadTryTimes;
-    
+
     int32_t timeout_ms;
     int32_t reloadTimeout_ms;
-    
+
     bool isRecved;
     bool isSucceed;
 
@@ -73,7 +73,7 @@ typedef struct
 
     int32_t stepAfterSucceed;
     int32_t stepAfterFailed;
-    
+
 } LteKeepAliveStruct;
 #pragma pack()
 
@@ -115,7 +115,7 @@ private:
     LteRawFifoStructure m_rawDataFifo; // 收到的消息全部存这里，后续从这里来拆包
 
     // 发送消息队列，基础状态管理，这个队列中的消息优先发送
-    LteMsgFifoStructure m_sendFifoForNet; // 
+    LteMsgFifoStructure m_sendFifoForNet; //
 
     // 发送消息队列，例如MQTT、HTTP等
     LteMsgFifoStructure m_sendFifoForOther;

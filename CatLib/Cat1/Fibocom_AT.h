@@ -7,11 +7,11 @@ extern "C" {
 
 #include "stdbool.h"
 
-    
+
 extern char LTE_AT_AT[];
-    
-    
-    
+
+
+
 /************************* RSP *************************/
 
 extern char LTE_AT_OK_RSP[];
@@ -19,8 +19,8 @@ extern char LTE_AT_ERR_RSP[];
 
 extern char LTE_AT_MODULE_READY_RSP[];
 extern char LTE_AT_SIM_READY_RSP[];
-    
-    
+
+
 typedef enum _LTE_AT_TYPE
 {
     LTE_AT_READ,

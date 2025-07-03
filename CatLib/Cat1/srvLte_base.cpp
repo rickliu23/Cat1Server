@@ -84,7 +84,7 @@ clsLteBaseIf *clsLteBaseIf::GetInstance(void)
 void clsLteBaseIf::Init(void)
 {
     HW_Printf("init\r\n");
-    
+
     Clear();
 }
 
@@ -93,18 +93,18 @@ void clsLteBaseIf::Start(void)
     isEnabled = true;
 
     KA_StatusArrayInit();
-    
+
     HW_Printf("start\r\n");
-    
-//    /*************************************/
-//    char msg[20] = { 0 } ;
-//    int len;
 
-//    Fibocom_AT_Assemble_Basic(LTE_AT_INDEX_AT, LTE_AT_READ, 0, msg, sizeof(msg), &len);
-//    Msg_PushForNet((uint8_t *)msg, len, 300);
-//    Msg_PushForNet((uint8_t *)msg, len, 300);
+    // /*************************************/
+    // char msg[20] = { 0 } ;
+    // int len;
 
-//    /*************************************/
+    // Fibocom_AT_Assemble_Basic(LTE_AT_INDEX_AT, LTE_AT_READ, 0, msg, sizeof(msg), &len);
+    // Msg_PushForNet((uint8_t *)msg, len, 300);
+    // Msg_PushForNet((uint8_t *)msg, len, 300);
+
+    // /*************************************/
 }
 
 void clsLteBaseIf::Stop(void)
@@ -188,7 +188,7 @@ void clsLteBaseIf::Uart_Recv(uint8_t *msg, uint32_t len)
         {
             m_rawDataFifo.tail++;
             m_rawDataFifo.tail %= LET_RAW_FIFO_MAX;
-            
+
             // 如果这个触发了，说明rawdata长度不够，需要增加
         }
     }
@@ -196,7 +196,7 @@ void clsLteBaseIf::Uart_Recv(uint8_t *msg, uint32_t len)
     m_rawDataFifo.isLock = false;
 
 #if 0
-    if (isFull)
+    if(isFull)
     {
         // fifo 满了，所以在这里处理一下，如果fifo不满，不推荐在这里处理
         Msg_RawDataProcess();
@@ -290,17 +290,17 @@ void clsLteBaseIf::Msg_SendQueueMngr(uint32_t t_ms)
 
 void clsLteBaseIf::Msg_RecvQueueMngr(uint32_t t_ms)
 {
-    if (m_recvFifo.tail == LET_INVALID_INDEX || m_recvFifo.isLock == true)
+    if(m_recvFifo.tail == LET_INVALID_INDEX || m_recvFifo.isLock == true)
     {
         return;
     }
-    
+
     m_recvFifo.isLock = true;
-    
+
     KA_MsgProcess(m_recvFifo.msg[m_recvFifo.tail], m_recvFifo.msgLen[m_recvFifo.tail]);
-    
+
     m_recvFifo.head = m_recvFifo.head == LET_INVALID_INDEX ? m_recvFifo.tail : m_recvFifo.head;
-    
+
     m_recvFifo.tail++;
     m_recvFifo.tail %= LET_MSG_FIFO_MAX_COUNT;
     m_recvFifo.tail = m_recvFifo.tail == m_recvFifo.head ? LET_INVALID_INDEX : m_recvFifo.tail;
@@ -452,31 +452,31 @@ bool clsLteBaseIf::Msg_PushToRecvQueue(uint8_t *msg, uint32_t len)
 /******************************** 基础状态维持函数 ******************************************/
 void clsLteBaseIf::KA_StatusArrayInit(void)
 {
-    LteKeepAliveStruct keepAliveStatusArray[LET_KEEPALIVE_ARRAY_COUNT] = 
+    LteKeepAliveStruct keepAliveStatusArray[LET_KEEPALIVE_ARRAY_COUNT] =
     {
-        {0, true, LTE_AT_INDEX_UNKNOW,    LTE_AT_READ,    0,  0,  0, 0, 200  , false, false,  0, 0,    1,  0},
-        {1, true, LTE_AT_INDEX_UNKNOW,    LTE_AT_READ,    0,  0,  0, 0, 5100 , false, false,  0, 0,    2,  0}, 
-        {2, true, LTE_AT_INDEX_AT,        LTE_AT_READ,    0,  0,  2, 0, 1100 , false, false,  0, 5000, 3,  0}, 
-        {3, true, LTE_AT_INDEX_ECHO,      LTE_AT_WRITE,   1,  0,  5, 0, 2000 , false, false,  0, 5000, 2,  0}, 
+        {0, true, LTE_AT_INDEX_UNKNOW, LTE_AT_READ, 0, 0, 0, 0, 200, false, false, 0, 0, 1, 0},
+        {1, true, LTE_AT_INDEX_UNKNOW, LTE_AT_READ, 0, 0, 0, 0, 5100, false, false, 0, 0, 2, 0},
+        {2, true, LTE_AT_INDEX_AT, LTE_AT_READ, 0, 0, 2, 0, 1100, false, false, 0, 5000, 3, 0},
+        {3, true, LTE_AT_INDEX_ECHO, LTE_AT_WRITE, 1, 0, 5, 0, 2000, false, false, 0, 5000, 2, 0},
     };
 
     memcpy(m_keepAliveStatusArray, keepAliveStatusArray, sizeof(keepAliveStatusArray));
-    
+
     m_nowStep = 0;
 }
 
 void clsLteBaseIf::KA_StateMachine(uint32_t t_ms)
 {
-    if (m_keepAliveStatusArray[m_nowStep].isRecved == false)
+    if(m_keepAliveStatusArray[m_nowStep].isRecved == false)
     {
-        if (m_keepAliveStatusArray[m_nowStep].timeout_ms > 0)
+        if(m_keepAliveStatusArray[m_nowStep].timeout_ms > 0)
         {
             m_keepAliveStatusArray[m_nowStep].timeout_ms -= t_ms;
             return;
         }
     }
-    
-    if (m_keepAliveStatusArray[m_nowStep].timewait_ms > 0)
+
+    if(m_keepAliveStatusArray[m_nowStep].timewait_ms > 0)
     {
         m_keepAliveStatusArray[m_nowStep].timewait_ms -= t_ms;
 
@@ -484,21 +484,21 @@ void clsLteBaseIf::KA_StateMachine(uint32_t t_ms)
     }
 
     // 当前命令执行成功
-    if (m_keepAliveStatusArray[m_nowStep].isSucceed == true)
+    if(m_keepAliveStatusArray[m_nowStep].isSucceed == true)
     {
         // 去预定的下一步
         m_nowStep = m_keepAliveStatusArray[m_nowStep].stepAfterSucceed;
 
         // 下一步是第一次执行
         m_keepAliveStatusArray[m_nowStep].isFirst = true;
-        
+
         // 加载等待时间
         m_keepAliveStatusArray[m_nowStep].timewait_ms = m_keepAliveStatusArray[m_nowStep].reloadtimewait_ms;
     }
     else // 当前命令执行失败
     {
         // 尝试次数归零
-        if (m_keepAliveStatusArray[m_nowStep].tryTimes <= 0)
+        if(m_keepAliveStatusArray[m_nowStep].tryTimes <= 0)
         {
             // 去预定的上一步
             m_nowStep = m_keepAliveStatusArray[m_nowStep].stepAfterFailed;
@@ -514,21 +514,21 @@ void clsLteBaseIf::KA_StateMachine(uint32_t t_ms)
 
     // 此处置位false，在收到消息后，如果符合预期，会置为true
     m_keepAliveStatusArray[m_nowStep].isRecved = false;
-    m_keepAliveStatusArray[m_nowStep].isSucceed = false; 
+    m_keepAliveStatusArray[m_nowStep].isSucceed = false;
 
-    if (m_nowStep == 0)
+    if(m_nowStep == 0)
     {
         HW_Printf("disable\r\n");
-        
+
         HW_LTE_Disable();
 
         // 直接设置为成功，等待超时即可
         m_keepAliveStatusArray[m_nowStep].isSucceed = true;
     }
-    else if (m_nowStep == 1)
+    else if(m_nowStep == 1)
     {
         HW_Printf("enable\r\n");
-        
+
         HW_LTE_Enable();
     }
     else
@@ -539,11 +539,11 @@ void clsLteBaseIf::KA_StateMachine(uint32_t t_ms)
         Msg_PushForNet((uint8_t *)msg, len, m_keepAliveStatusArray[m_nowStep].timeout_ms - 100);
     }
 
-     // 重新加载超时时间
+    // 重新加载超时时间
     m_keepAliveStatusArray[m_nowStep].timeout_ms = m_keepAliveStatusArray[m_nowStep].reloadTimeout_ms;
-    
+
     // 如果是第一次执行，需要重新加载重试次数
-    if (m_keepAliveStatusArray[m_nowStep].isFirst == true)
+    if(m_keepAliveStatusArray[m_nowStep].isFirst == true)
     {
         m_keepAliveStatusArray[m_nowStep].tryTimes = m_keepAliveStatusArray[m_nowStep].reloadTryTimes;
 
@@ -555,41 +555,41 @@ void clsLteBaseIf::KA_MsgProcess(uint8_t *msg, uint32_t len)
 {
     char *pos = NULL;
     LTE_AT_INDEX atCmdIndex = m_keepAliveStatusArray[m_nowStep].cmd;
-    
+
     m_keepAliveStatusArray[m_nowStep].isRecved = true;
 
     switch(atCmdIndex)
     {
         case LTE_AT_INDEX_UNKNOW:
         {
-            pos = my_strstr((char*)msg, len, LTE_AT_MODULE_READY_RSP);
-            if (pos)
+            pos = my_strstr((char *)msg, len, LTE_AT_MODULE_READY_RSP);
+            if(pos)
             {
                 m_keepAliveStatusArray[m_nowStep].isSucceed = true;
             }
         }
         break;
-        
+
         case LTE_AT_INDEX_AT:
         {
-            pos = my_strstr((char*)msg, len, LTE_AT_OK_RSP);
-            if (pos)
+            pos = my_strstr((char *)msg, len, LTE_AT_OK_RSP);
+            if(pos)
             {
                 m_keepAliveStatusArray[m_nowStep].isSucceed = true;
             }
         }
         break;
-        
+
         case LTE_AT_INDEX_ECHO:
         {
-            pos = my_strstr((char*)msg, len, LTE_AT_OK_RSP);
-            if (pos)
+            pos = my_strstr((char *)msg, len, LTE_AT_OK_RSP);
+            if(pos)
             {
                 m_keepAliveStatusArray[m_nowStep].isSucceed = true;
             }
         }
         break;
-        
+
         default:
         {
             HW_Printf("unknow msg\r\n");
