@@ -8,42 +8,21 @@ extern "C" {
 #include "stdbool.h"
 #include "stdint.h"
 #include "Fibocom_AT.h"
-
+#include "Lte_Basic.h"
+#include "srvLte_Interface.h"
+    
 class clsLteBaseIf;
 
 typedef void (clsLteBaseIf::*MemberMemberFunPtrTemplate)(void);
 
-#define LTE_INVALID_INDEX   (-1)
-
-#define LTE_RAW_FIFO_MAX             (200)
-
-#define LTE_MSG_FIFO_MAX_COUNT       (5)
-#define LTE_MSG_FIFO_MAX_BYTES       (100)
 
 #define LTE_KEEPALIVE_ARRAY_COUNT       (10)
 
 #define LTE_SENDBUFFER_BYTES        (100)
 
-typedef struct
-{
-    volatile bool isLock;
-    uint8_t array[LTE_RAW_FIFO_MAX];
-    int16_t head;
-    int16_t tail;
-} LteRawFifoStructure; // 存放原始数据的buffer
 
-typedef struct
-{
-    volatile bool isLock;
 
-    uint8_t msg[LTE_MSG_FIFO_MAX_COUNT][LTE_MSG_FIFO_MAX_BYTES];
-    uint32_t msgLen[LTE_MSG_FIFO_MAX_COUNT];
-    int16_t timeout[LTE_MSG_FIFO_MAX_COUNT]; // for recv, useless
 
-    int16_t head;
-    int16_t tail;
-
-} LteMsgFifoStructure; // 存放完整消息的buffer，放到这里的消息，一定是完整的，不存在粘包
 
 typedef struct
 {

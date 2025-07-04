@@ -1,20 +1,20 @@
 #include "transfer.h"
-#include "srvLte_Base.h"
+#include "srvLte.h"
 
-clsLteBaseIf *clsLteBaseObj = 0;
+clsLteIf *clsLteObj = 0;
 
 void Main_Init(void)
 {
-    clsLteBaseObj = clsLteBaseIf::GetInstance();
-    clsLteBaseObj->Init();
-    clsLteBaseObj->Start();
+    clsLteObj = clsLteIf::GetInstance();
+    clsLteObj->Init();
+    clsLteObj->Start();
 
 
 }
 
 void Main_OnTimer(int time_ms)
 {
-    if(clsLteBaseObj == 0)
+    if(clsLteObj == 0)
     {
         return;
     }
@@ -24,18 +24,18 @@ void Main_OnTimer(int time_ms)
 
     if((time % 10) == 0)
     {
-        clsLteBaseObj->OnTimerFast();
+        clsLteObj->OnTimerFast();
     }
 
     if((time % 100) == 0)
     {
-        clsLteBaseObj->OnTimer();
+        clsLteObj->OnTimer();
     }
 
     if((time % 1000) == 0)
     {
         time = 0;
 
-        clsLteBaseObj->OnTimerSlow();
+        clsLteObj->OnTimerSlow();
     }
 }

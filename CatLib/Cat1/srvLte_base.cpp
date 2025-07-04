@@ -182,12 +182,12 @@ void clsLteBaseIf::Uart_Recv(uint8_t *msg, uint32_t len)
     for(uint32_t i = 0; i < len; i++)
     {
         m_rawDataFifo.array[m_rawDataFifo.head++] = msg[i++];
-        m_rawDataFifo.head %= LTE_RAW_FIFO_MAX;
+        m_rawDataFifo.head %= LTE_RAW_FIFO_MAX_BYTES;
 
         if(m_rawDataFifo.tail == m_rawDataFifo.head)
         {
             m_rawDataFifo.tail++;
-            m_rawDataFifo.tail %= LTE_RAW_FIFO_MAX;
+            m_rawDataFifo.tail %= LTE_RAW_FIFO_MAX_BYTES;
 
             // 如果这个触发了，说明rawdata长度不够，需要增加
         }
