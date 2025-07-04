@@ -22,7 +22,7 @@ extern char LTE_AT_AT[];
 extern char LTE_AT_ECHO[];
 extern char LTE_AT_SIM_PIN[];
 extern char LTE_AT_CSQ[] ;
-
+extern char LTE_AT_NET_REG[];
 
 /************************* RSP *************************/
 
@@ -46,16 +46,16 @@ typedef enum _LTE_AT_INDEX
 {
     LTE_AT_INDEX_UNKNOW = 0,
 
-    LTE_AT_INDEX_AT = 1,
-    // LTE_AT_INDEX_INFO,
-    LTE_AT_INDEX_ECHO,
-
-    LTE_AT_INDEX_SIM_PIN,
+    LTE_AT_INDEX_AT = 1, // AT测试通信
+    LTE_AT_INDEX_ECHO, // 打开回显
+    LTE_AT_INDEX_SIM_PIN, // 查询sim卡是否存在
+    LTE_AT_INDEX_CSQ, // 查询信号强度
+    LTE_AT_INDEX_NET_REG, // 网络注册
 
     // LTE_AT_INDEX_ATI,
     // LTE_AT_INDEX_FILE,
     // LTE_AT_INDEX_FILE_DEL,
-    LTE_AT_INDEX_CSQ,
+    
     // LTE_AT_INDEX_FUNC,
 
     // LTE_AT_INDEX_NET_REG,

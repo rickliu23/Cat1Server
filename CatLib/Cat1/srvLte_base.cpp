@@ -460,7 +460,8 @@ void clsLteBaseIf::KA_StatusArrayInit(void)
         {2,    LTE_AT_INDEX_AT,      LTE_AT_READ,    0,      1,      1100,     false,      100,     3,          0}, // 尝试发AT
         {3,    LTE_AT_INDEX_ECHO,    LTE_AT_WRITE,   1,      1,      1100,     false,      100,     4,          1}, // 打开回显
         {4,    LTE_AT_INDEX_SIM_PIN, LTE_AT_READ,    0,      3,      2000,     false,      100,     5,          0}, // 查询是否存在sim卡
-        {5,    LTE_AT_INDEX_CSQ,     LTE_AT_READ,    0,      1,      1100,     false,      5000,    4,          4}, // 查询信号质量
+        {5,    LTE_AT_INDEX_CSQ,     LTE_AT_READ,    0,      1,      1100,     false,      5000,    6,          4}, // 查询信号质量
+        {6,    LTE_AT_INDEX_NET_REG, LTE_AT_READ,    0,      1,      1100,     false,      5100,    4,          4}, // 查询网络注册状态
     };
 
     memcpy(m_keepAliveStatusArray, keepAliveStatusArray, sizeof(keepAliveStatusArray));

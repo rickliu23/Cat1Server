@@ -17,12 +17,12 @@ char LTE_AT_AT[] = "AT";
 char LTE_AT_ECHO[] = "E";
 char LTE_AT_SIM_PIN[] = "CPIN";
 char LTE_AT_CSQ[] = "CSQ";
-
+char LTE_AT_NET_REG[] = "CEREG";
 
 char LTE_AT_FUNC[] = "CFUN";
 
 
-char LTE_AT_NET_REG[] = "CEREG";
+
 char LTE_AT_CALL[] = "MIPCALL";
 
 
@@ -113,6 +113,19 @@ bool Fibocom_AT_Assemble_Basic(LTE_AT_INDEX id, LTE_AT_TYPE type, int param, cha
             sprintf(cmdBuf, "%s+%s\r\n", LTE_AT_AT, LTE_AT_CSQ);
         else if(type == LTE_AT_QUERY)
             sprintf(cmdBuf, "%s+%s=?\r\n", LTE_AT_AT, LTE_AT_CSQ);
+    }
+    else if (id == LTE_AT_INDEX_NET_REG)
+    {
+        if(type == LTE_AT_READ)
+            sprintf(cmdBuf, "%s+%s?\r\n", LTE_AT_AT, LTE_AT_NET_REG);
+        else if(type == LTE_AT_WRITE)
+        {
+            if(param > 5)
+                return NULL;
+            sprintf(cmdBuf, "%s+%s=%d\r\n", LTE_AT_AT, LTE_AT_NET_REG, param);
+        }
+        else if(type == LTE_AT_QUERY)
+            sprintf(cmdBuf, "%s+%s=?\r\n", LTE_AT_AT, LTE_AT_NET_REG);
     }
     else
     {
