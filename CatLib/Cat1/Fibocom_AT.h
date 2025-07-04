@@ -17,12 +17,6 @@ extern "C" {
 // 模块复位结束之后主动发送该指令
 extern char LTE_AT_MODULE_READY_RSP[];
 
-extern char LTE_AT_OK_RSP[];
-extern char LTE_AT_ERR_RSP[];
-extern char LTE_AT_SIM_READY_RSP[];
-
-
-
 /************************* Basic CMD *************************/
 extern char LTE_AT_AT[];
 extern char LTE_AT_ECHO[];
@@ -30,6 +24,13 @@ extern char LTE_AT_SIM_PIN[];
 extern char LTE_AT_CSQ[] ;
 
 
+/************************* RSP *************************/
+
+
+extern char LTE_AT_OK_RSP[];
+extern char LTE_AT_ERR_RSP[];
+extern char LTE_AT_SIM_READY_RSP[];
+extern char LTE_AT_CSQ_RSP[];
 
 
 typedef enum _LTE_AT_TYPE

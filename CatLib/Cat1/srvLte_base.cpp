@@ -177,17 +177,17 @@ void clsLteBaseIf::Uart_Recv(uint8_t *msg, uint32_t len)
 
     m_rawDataFifo.isLock = true;
 
-    m_rawDataFifo.tail = m_rawDataFifo.tail == LET_INVALID_INDEX ? m_rawDataFifo.head : m_rawDataFifo.tail;
+    m_rawDataFifo.tail = m_rawDataFifo.tail == LTE_INVALID_INDEX ? m_rawDataFifo.head : m_rawDataFifo.tail;
 
     for(uint32_t i = 0; i < len; i++)
     {
         m_rawDataFifo.array[m_rawDataFifo.head++] = msg[i++];
-        m_rawDataFifo.head %= LET_RAW_FIFO_MAX;
+        m_rawDataFifo.head %= LTE_RAW_FIFO_MAX;
 
         if(m_rawDataFifo.tail == m_rawDataFifo.head)
         {
             m_rawDataFifo.tail++;
-            m_rawDataFifo.tail %= LET_RAW_FIFO_MAX;
+            m_rawDataFifo.tail %= LTE_RAW_FIFO_MAX;
 
             // 如果这个触发了，说明rawdata长度不够，需要增加
         }
@@ -214,19 +214,19 @@ void Friend_Uart_Recv(uint8_t *msg, uint32_t len)
 void clsLteBaseIf::Msg_Clear(void)
 {
     m_rawDataFifo.head = 0;
-    m_rawDataFifo.tail = LET_INVALID_INDEX;
+    m_rawDataFifo.tail = LTE_INVALID_INDEX;
     m_rawDataFifo.isLock = false;
 
     m_sendFifoForNet.head = 0;
-    m_sendFifoForNet.tail = LET_INVALID_INDEX;
+    m_sendFifoForNet.tail = LTE_INVALID_INDEX;
     m_sendFifoForNet.isLock = false;
 
     m_sendFifoForOther.head = 0;
-    m_sendFifoForOther.tail = LET_INVALID_INDEX;
+    m_sendFifoForOther.tail = LTE_INVALID_INDEX;
     m_sendFifoForOther.isLock = false;
 
     m_recvFifo.head = 0;
-    m_recvFifo.tail = LET_INVALID_INDEX;
+    m_recvFifo.tail = LTE_INVALID_INDEX;
     m_recvFifo.isLock = false;
 
     m_msgState.isWaitForReply = false;
@@ -247,7 +247,7 @@ void clsLteBaseIf::Msg_SendQueueMngr(uint32_t t_ms)
         m_msgState.isWaitForReply = false;
     }
 
-    if(m_sendFifoForNet.tail != LET_INVALID_INDEX && m_sendFifoForNet.isLock == false)
+    if(m_sendFifoForNet.tail != LTE_INVALID_INDEX && m_sendFifoForNet.isLock == false)
     {
         m_sendFifoForNet.isLock = true;
 
@@ -256,18 +256,18 @@ void clsLteBaseIf::Msg_SendQueueMngr(uint32_t t_ms)
         m_msgState.isWaitForReply = true;
         m_msgState.timeout = m_sendFifoForNet.timeout[m_sendFifoForNet.tail];
 
-        m_sendFifoForNet.head = m_sendFifoForNet.head == LET_INVALID_INDEX ? m_sendFifoForNet.tail : m_sendFifoForNet.head;
+        m_sendFifoForNet.head = m_sendFifoForNet.head == LTE_INVALID_INDEX ? m_sendFifoForNet.tail : m_sendFifoForNet.head;
 
         m_sendFifoForNet.tail += 1;
-        m_sendFifoForNet.tail %= LET_MSG_FIFO_MAX_COUNT;
-        m_sendFifoForNet.tail = m_sendFifoForNet.tail == m_sendFifoForNet.head ? LET_INVALID_INDEX : m_sendFifoForNet.tail;
+        m_sendFifoForNet.tail %= LTE_MSG_FIFO_MAX_COUNT;
+        m_sendFifoForNet.tail = m_sendFifoForNet.tail == m_sendFifoForNet.head ? LTE_INVALID_INDEX : m_sendFifoForNet.tail;
 
         m_sendFifoForNet.isLock = false;
 
         return;
     }
 
-    if(m_sendFifoForOther.tail != LET_INVALID_INDEX && m_sendFifoForOther.isLock == false)
+    if(m_sendFifoForOther.tail != LTE_INVALID_INDEX && m_sendFifoForOther.isLock == false)
     {
         m_sendFifoForOther.isLock = true;
 
@@ -276,11 +276,11 @@ void clsLteBaseIf::Msg_SendQueueMngr(uint32_t t_ms)
         m_msgState.isWaitForReply = true;
         m_msgState.timeout = m_sendFifoForOther.timeout[m_sendFifoForNet.tail];
 
-        m_sendFifoForOther.head = m_sendFifoForOther.head == LET_INVALID_INDEX ? m_sendFifoForOther.tail : m_sendFifoForOther.head;
+        m_sendFifoForOther.head = m_sendFifoForOther.head == LTE_INVALID_INDEX ? m_sendFifoForOther.tail : m_sendFifoForOther.head;
 
         m_sendFifoForOther.tail += 1;
-        m_sendFifoForOther.tail %= LET_MSG_FIFO_MAX_COUNT;
-        m_sendFifoForOther.tail = m_sendFifoForOther.tail == m_sendFifoForOther.head ? LET_INVALID_INDEX : m_sendFifoForOther.tail;
+        m_sendFifoForOther.tail %= LTE_MSG_FIFO_MAX_COUNT;
+        m_sendFifoForOther.tail = m_sendFifoForOther.tail == m_sendFifoForOther.head ? LTE_INVALID_INDEX : m_sendFifoForOther.tail;
 
         m_sendFifoForOther.isLock = false;
 
@@ -290,7 +290,7 @@ void clsLteBaseIf::Msg_SendQueueMngr(uint32_t t_ms)
 
 void clsLteBaseIf::Msg_RecvQueueMngr(uint32_t t_ms)
 {
-    if(m_recvFifo.tail == LET_INVALID_INDEX || m_recvFifo.isLock == true)
+    if(m_recvFifo.tail == LTE_INVALID_INDEX || m_recvFifo.isLock == true)
     {
         return;
     }
@@ -299,18 +299,18 @@ void clsLteBaseIf::Msg_RecvQueueMngr(uint32_t t_ms)
 
     KA_MsgProcess(m_recvFifo.msg[m_recvFifo.tail], m_recvFifo.msgLen[m_recvFifo.tail]);
 
-    m_recvFifo.head = m_recvFifo.head == LET_INVALID_INDEX ? m_recvFifo.tail : m_recvFifo.head;
+    m_recvFifo.head = m_recvFifo.head == LTE_INVALID_INDEX ? m_recvFifo.tail : m_recvFifo.head;
 
     m_recvFifo.tail++;
-    m_recvFifo.tail %= LET_MSG_FIFO_MAX_COUNT;
-    m_recvFifo.tail = m_recvFifo.tail == m_recvFifo.head ? LET_INVALID_INDEX : m_recvFifo.tail;
+    m_recvFifo.tail %= LTE_MSG_FIFO_MAX_COUNT;
+    m_recvFifo.tail = m_recvFifo.tail == m_recvFifo.head ? LTE_INVALID_INDEX : m_recvFifo.tail;
 
     m_recvFifo.isLock = false;
 }
 
 void clsLteBaseIf::Msg_RawDataProcess()
 {
-    if(m_rawDataFifo.tail == LET_INVALID_INDEX)
+    if(m_rawDataFifo.tail == LTE_INVALID_INDEX)
     {
         return;
     }
@@ -323,7 +323,7 @@ void clsLteBaseIf::Msg_RawDataProcess()
         return;
     }
 
-    char cmdBufTemp[LET_MSG_FIFO_MAX_BYTES] = { 0 };
+    char cmdBufTemp[LTE_MSG_FIFO_MAX_BYTES] = { 0 };
     int16_t cmdBufLen = 0;
 
     char *pos = NULL;
@@ -381,7 +381,7 @@ void clsLteBaseIf::Msg_RawDataProcess()
         if(m_rawDataFifo.tail >= m_rawDataFifo.head)
         {
             // 拆包结束
-            m_rawDataFifo.tail = LET_INVALID_INDEX;
+            m_rawDataFifo.tail = LTE_INVALID_INDEX;
             break;
         }
     }
@@ -392,7 +392,7 @@ FINISH:
     /********** clear all **********/
     // 能拆的都拆出来了，拆不出来的一律清理
     m_rawDataFifo.head = 0;
-    m_rawDataFifo.tail = LET_INVALID_INDEX;
+    m_rawDataFifo.tail = LTE_INVALID_INDEX;
     memset(m_rawDataFifo.array, 0, sizeof(m_rawDataFifo.array));
 
     m_rawDataFifo.isLock = false;
@@ -400,7 +400,7 @@ FINISH:
 
 bool clsLteBaseIf::Msg_PushForNet(uint8_t *msg, uint32_t len, uint32_t timeout_ms)
 {
-    if(m_sendFifoForNet.head == LET_INVALID_INDEX || m_sendFifoForNet.isLock == true)
+    if(m_sendFifoForNet.head == LTE_INVALID_INDEX || m_sendFifoForNet.isLock == true)
     {
         return false;
     }
@@ -411,11 +411,11 @@ bool clsLteBaseIf::Msg_PushForNet(uint8_t *msg, uint32_t len, uint32_t timeout_m
     m_sendFifoForNet.msgLen[m_sendFifoForNet.head] = len;
     m_sendFifoForNet.timeout[m_sendFifoForNet.head] = timeout_ms;
 
-    m_sendFifoForNet.tail = m_sendFifoForNet.tail == LET_INVALID_INDEX ? m_sendFifoForNet.head : m_sendFifoForNet.tail;
+    m_sendFifoForNet.tail = m_sendFifoForNet.tail == LTE_INVALID_INDEX ? m_sendFifoForNet.head : m_sendFifoForNet.tail;
 
     m_sendFifoForNet.head += 1;
-    m_sendFifoForNet.head %= LET_MSG_FIFO_MAX_COUNT;
-    m_sendFifoForNet.head = m_sendFifoForNet.head == m_sendFifoForNet.tail ? LET_INVALID_INDEX : m_sendFifoForNet.head;
+    m_sendFifoForNet.head %= LTE_MSG_FIFO_MAX_COUNT;
+    m_sendFifoForNet.head = m_sendFifoForNet.head == m_sendFifoForNet.tail ? LTE_INVALID_INDEX : m_sendFifoForNet.head;
 
     m_sendFifoForNet.isLock = false;
 
@@ -428,7 +428,7 @@ bool clsLteBaseIf::Msg_PushToRecvQueue(uint8_t *msg, uint32_t len)
         HW_DEBUG_Transmit((uint8_t *)(msg + i), 1);
     }
 
-    if(m_recvFifo.head == LET_INVALID_INDEX || m_recvFifo.isLock == true)
+    if(m_recvFifo.head == LTE_INVALID_INDEX || m_recvFifo.isLock == true)
     {
         return false;
     }
@@ -438,11 +438,11 @@ bool clsLteBaseIf::Msg_PushToRecvQueue(uint8_t *msg, uint32_t len)
     memcpy(m_recvFifo.msg + m_recvFifo.head, msg, len);
     m_recvFifo.msgLen[m_recvFifo.head] = len;
 
-    m_recvFifo.tail = m_recvFifo.tail == LET_INVALID_INDEX ? m_recvFifo.head : m_recvFifo.tail;
+    m_recvFifo.tail = m_recvFifo.tail == LTE_INVALID_INDEX ? m_recvFifo.head : m_recvFifo.tail;
 
     m_recvFifo.head += 1;
-    m_recvFifo.head %= LET_MSG_FIFO_MAX_COUNT;
-    m_recvFifo.head = m_recvFifo.head == m_recvFifo.tail ? LET_INVALID_INDEX : m_recvFifo.head;
+    m_recvFifo.head %= LTE_MSG_FIFO_MAX_COUNT;
+    m_recvFifo.head = m_recvFifo.head == m_recvFifo.tail ? LTE_INVALID_INDEX : m_recvFifo.head;
 
     m_recvFifo.isLock = false;
 
@@ -452,85 +452,117 @@ bool clsLteBaseIf::Msg_PushToRecvQueue(uint8_t *msg, uint32_t len)
 /******************************** 基础状态维持函数 ******************************************/
 void clsLteBaseIf::KA_StatusArrayInit(void)
 {
-    LteKeepAliveStruct keepAliveStatusArray[LET_KEEPALIVE_ARRAY_COUNT] =
+    LteKeepAliveStruct keepAliveStatusArray[LTE_KEEPALIVE_ARRAY_COUNT] =
     {
-      //index   isFirst  cmd                  type           para   tryTimes  reload  timeout   reload   recv   succeed   wait  reload   succeed step,  failed step
-        {0,     true,    LTE_AT_INDEX_UNKNOW,  LTE_AT_READ,    0,     0,        0,      0,       200,     false,  false,    0,     0,       1,          0}, // disable模块
-        {1,     true,    LTE_AT_INDEX_UNKNOW,  LTE_AT_READ,    0,     0,        0,      0,       5100,    false,  false,    0,     0,       2,          0}, // enable模块
-        {2,     true,    LTE_AT_INDEX_AT,      LTE_AT_READ,    0,     0,        2,      0,       1100,    false,  false,    0,     0,       3,          0}, // 尝试发AT
-        {3,     true,    LTE_AT_INDEX_ECHO,    LTE_AT_WRITE,   1,     0,        5,      0,       2000,    false,  false,    0,     0,       4,          0}, // 打开回显
-        {4,     true,    LTE_AT_INDEX_SIM_PIN, LTE_AT_READ,    1,     0,        5,      0,       2000,    false,  false,    0,     5000,    4,          4}, // 查询是否存在sim卡
+      //index   cmd                  type           para trytimes   timeout   succeed    wait   succeed step,  failed step
+        {0,    LTE_AT_INDEX_UNKNOW,  LTE_AT_READ,    0,      1,      0,        false,      100,     1,          0}, // disable模块
+        {1,    LTE_AT_INDEX_UNKNOW,  LTE_AT_READ,    0,      1,      5000,     false,      5000,    2,          0}, // enable模块
+        {2,    LTE_AT_INDEX_AT,      LTE_AT_READ,    0,      1,      1100,     false,      100,     3,          0}, // 尝试发AT
+        {3,    LTE_AT_INDEX_ECHO,    LTE_AT_WRITE,   1,      1,      1100,     false,      100,     4,          1}, // 打开回显
+        {4,    LTE_AT_INDEX_SIM_PIN, LTE_AT_READ,    0,      3,      2000,     false,      100,     5,          0}, // 查询是否存在sim卡
+        {5,    LTE_AT_INDEX_CSQ,     LTE_AT_READ,    0,      1,      1100,     false,      5000,    4,          4}, // 查询信号质量
     };
 
     memcpy(m_keepAliveStatusArray, keepAliveStatusArray, sizeof(keepAliveStatusArray));
 
-    m_nowStep = 0;
+    m_KASM.nowStep = 0;
+    m_KASM.timeout = 0;
+    m_KASM.tryTimes = 0;
+    m_KASM.isRecved = false;
+    m_KASM.waitBeforeNextStep = 0;
 }
 
 void clsLteBaseIf::KA_StateMachine(uint32_t t_ms)
 {
-    if(m_keepAliveStatusArray[m_nowStep].isRecved == false)
+    // 如果没收到消息，继续等待
+    if(m_KASM.isRecved == false)
     {
-        if(m_keepAliveStatusArray[m_nowStep].timeout_ms > 0)
+        if(m_KASM.timeout > 0)
         {
-            m_keepAliveStatusArray[m_nowStep].timeout_ms -= t_ms;
+            m_KASM.timeout -= t_ms;
+            return;
+        }
+    }
+    else // 收到回复消息
+    {
+        m_KASM.timeout = 0;
+    }
+
+    // 是否需要等待，此处只会在两条命令交替时使用
+    if(m_KASM.waitBeforeNextStep > 0)
+    {
+        m_KASM.waitBeforeNextStep -= t_ms;
+
+        if(m_KASM.waitBeforeNextStep <= 0)
+        {
+            // 开始执行新命令，加载最大尝试次数
+            m_KASM.tryTimes = m_keepAliveStatusArray[m_KASM.nowStep].reloadTryTimes;
+
+            // 此处置位false，解析消息后，如果符合预期，置true
+            m_keepAliveStatusArray[m_KASM.nowStep].isSucceed = false;
+        }
+        else
+        {
             return;
         }
     }
 
-    if(m_keepAliveStatusArray[m_nowStep].timewait_ms > 0)
+    // 当前消息为成功状态
+    if(m_keepAliveStatusArray[m_KASM.nowStep].isSucceed == true)
     {
-        m_keepAliveStatusArray[m_nowStep].timewait_ms -= t_ms;
+        // 加载
+        m_KASM.waitBeforeNextStep = m_keepAliveStatusArray[m_KASM.nowStep].reloadtimewait_ms;
+        m_KASM.waitBeforeNextStep = m_KASM.waitBeforeNextStep <= 0 ? 10 : m_KASM.waitBeforeNextStep;
+
+        // 进入下一条消息
+        m_KASM.nowStep = m_keepAliveStatusArray[m_KASM.nowStep].stepAfterSucceed;
 
         return;
     }
-
-    // 当前命令执行成功
-    if(m_keepAliveStatusArray[m_nowStep].isSucceed == true)
+    else
     {
-        // 去预定的下一步
-        m_nowStep = m_keepAliveStatusArray[m_nowStep].stepAfterSucceed;
-
-        // 下一步是第一次执行
-        m_keepAliveStatusArray[m_nowStep].isFirst = true;
-
-        // 加载等待时间
-        m_keepAliveStatusArray[m_nowStep].timewait_ms = m_keepAliveStatusArray[m_nowStep].reloadtimewait_ms;
-    }
-    else // 当前命令执行失败
-    {
-        // 尝试次数归零
-        if(m_keepAliveStatusArray[m_nowStep].tryTimes <= 0)
+        if(m_KASM.tryTimes <= 0) // 超出尝试次数，进入下一条
         {
-            // 去预定的上一步
-            m_nowStep = m_keepAliveStatusArray[m_nowStep].stepAfterFailed;
+            // 加载
+            m_KASM.waitBeforeNextStep = m_keepAliveStatusArray[m_KASM.nowStep].reloadtimewait_ms;
+            m_KASM.waitBeforeNextStep = m_KASM.waitBeforeNextStep <= 0 ? 10 : m_KASM.waitBeforeNextStep;
 
-            // 第一次执行
-            m_keepAliveStatusArray[m_nowStep].isFirst = true;
+            if(m_KASM.nowStep == 4)
+            {
+                m_KASM.tryTimes = 1;
+            }
 
-            // 加载等待时间
-            m_keepAliveStatusArray[m_nowStep].timewait_ms = m_keepAliveStatusArray[m_nowStep].reloadtimewait_ms;
+            // 进入下一条消息
+            m_KASM.nowStep = m_keepAliveStatusArray[m_KASM.nowStep].stepAfterFailed;
+
+            return;
         }
-        else // 继续尝试
+        else
         {
-            m_keepAliveStatusArray[m_nowStep].tryTimes -= 1;
+            char msg[20];
+            sprintf(msg, "index: %d, retry: %d\r\n", m_KASM.nowStep, m_KASM.tryTimes);
+            HW_Printf(msg);
+            m_KASM.tryTimes--; // 继续尝试
         }
     }
 
-    // 此处置位false，在收到消息后，如果符合预期，会置为true
-    m_keepAliveStatusArray[m_nowStep].isRecved = false;
-    m_keepAliveStatusArray[m_nowStep].isSucceed = false;
+    // 此处置位false，在收到消息后，会置为true
+    m_KASM.isRecved = false;
 
-    if(m_nowStep == 0)
+    // 加载
+    m_KASM.timeout = m_keepAliveStatusArray[m_KASM.nowStep].reloadTimeout_ms;
+
+    if(m_KASM.nowStep == 0)
     {
         HW_Printf("disable\r\n");
 
         HW_LTE_Disable();
 
-        // 直接设置为成功，等待超时即可
-        m_keepAliveStatusArray[m_nowStep].isSucceed = true;
+        m_KASM.isRecved = true;
+        // 直接设置为成功
+        m_keepAliveStatusArray[m_KASM.nowStep].isSucceed = true;
     }
-    else if(m_nowStep == 1)
+    else if(m_KASM.nowStep == 1)
     {
         HW_Printf("enable\r\n");
 
@@ -538,30 +570,20 @@ void clsLteBaseIf::KA_StateMachine(uint32_t t_ms)
     }
     else
     {
-        char msg[20] = { 0 };
-        int len;
-        Fibocom_AT_Assemble_Basic(m_keepAliveStatusArray[m_nowStep].cmd, m_keepAliveStatusArray[m_nowStep].type, m_keepAliveStatusArray[m_nowStep].para, msg, sizeof(msg), &len);
-        Msg_PushForNet((uint8_t *)msg, len, m_keepAliveStatusArray[m_nowStep].timeout_ms - 100);
-    }
 
-    // 重新加载超时时间
-    m_keepAliveStatusArray[m_nowStep].timeout_ms = m_keepAliveStatusArray[m_nowStep].reloadTimeout_ms;
-
-    // 如果是第一次执行，需要重新加载重试次数
-    if(m_keepAliveStatusArray[m_nowStep].isFirst == true)
-    {
-        m_keepAliveStatusArray[m_nowStep].tryTimes = m_keepAliveStatusArray[m_nowStep].reloadTryTimes;
-
-        m_keepAliveStatusArray[m_nowStep].isFirst = false;
+        if(Fibocom_AT_Assemble_Basic(m_keepAliveStatusArray[m_KASM.nowStep].cmd, m_keepAliveStatusArray[m_KASM.nowStep].type, m_keepAliveStatusArray[m_KASM.nowStep].para, (char *)m_sendBuffer, LTE_SENDBUFFER_BYTES, &m_sendLen) == true)
+        {
+            Msg_PushForNet((uint8_t *)m_sendBuffer, m_sendLen, m_keepAliveStatusArray[m_KASM.nowStep].reloadTimeout_ms - 100);
+        }
     }
 }
 
 void clsLteBaseIf::KA_MsgProcess(uint8_t *msg, uint32_t len)
 {
     char *pos = NULL;
-    LTE_AT_INDEX atCmdIndex = m_keepAliveStatusArray[m_nowStep].cmd;
+    LTE_AT_INDEX atCmdIndex = m_keepAliveStatusArray[m_KASM.nowStep].cmd;
 
-    m_keepAliveStatusArray[m_nowStep].isRecved = true;
+    m_KASM.isRecved = true;
 
     switch(atCmdIndex)
     {
@@ -570,7 +592,8 @@ void clsLteBaseIf::KA_MsgProcess(uint8_t *msg, uint32_t len)
             pos = my_strstr((char *)msg, len, LTE_AT_MODULE_READY_RSP);
             if(pos)
             {
-                m_keepAliveStatusArray[m_nowStep].isSucceed = true;
+                m_keepAliveStatusArray[m_KASM.nowStep].isSucceed = true;
+                // HW_Printf("Lte, start succeed\r\n\r\n");
             }
         }
         break;
@@ -580,7 +603,8 @@ void clsLteBaseIf::KA_MsgProcess(uint8_t *msg, uint32_t len)
             pos = my_strstr((char *)msg, len, LTE_AT_OK_RSP);
             if(pos)
             {
-                m_keepAliveStatusArray[m_nowStep].isSucceed = true;
+                m_keepAliveStatusArray[m_KASM.nowStep].isSucceed = true;
+                // HW_Printf("Lte, AT succeed\r\n\r\n");
             }
         }
         break;
@@ -590,7 +614,8 @@ void clsLteBaseIf::KA_MsgProcess(uint8_t *msg, uint32_t len)
             pos = my_strstr((char *)msg, len, LTE_AT_OK_RSP);
             if(pos)
             {
-                m_keepAliveStatusArray[m_nowStep].isSucceed = true;
+                m_keepAliveStatusArray[m_KASM.nowStep].isSucceed = true;
+                // HW_Printf("Lte, echo succeed\r\n\r\n");
             }
         }
         break;
@@ -600,7 +625,19 @@ void clsLteBaseIf::KA_MsgProcess(uint8_t *msg, uint32_t len)
             pos = my_strstr((char *)msg, len, LTE_AT_SIM_READY_RSP);
             if(pos)
             {
-                m_keepAliveStatusArray[m_nowStep].isSucceed = true;
+                m_keepAliveStatusArray[m_KASM.nowStep].isSucceed = true;
+                // HW_Printf("Lte, sim exist\r\n\r\n");
+            }
+        }
+        break;
+
+        case LTE_AT_INDEX_CSQ:
+        {
+            pos = my_strstr((char *)msg, len, LTE_AT_CSQ_RSP);
+            if(pos)
+            {
+                m_keepAliveStatusArray[m_KASM.nowStep].isSucceed = true;
+                // HW_Printf("Lte, CSQ get\r\n\r\n");
             }
         }
         break;

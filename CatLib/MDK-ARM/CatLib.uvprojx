@@ -313,7 +313,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>0</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -527,6 +527,11 @@
               <FileName>transfer.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\Cat1\transfer.h</FilePath>
+            </File>
+            <File>
+              <FileName>Lte_Basic.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Lte_Basic.h</FilePath>
             </File>
             <File>
               <FileName>Fibocom_AT.c</FileName>

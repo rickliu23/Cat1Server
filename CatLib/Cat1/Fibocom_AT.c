@@ -12,10 +12,6 @@
 // 模块复位结束之后主动发送该指令
 char LTE_AT_MODULE_READY_RSP[] = "AT command ready";
 
-char LTE_AT_OK_RSP[] = "OK";
-char LTE_AT_ERR_RSP[] = "ERROR";
-char LTE_AT_SIM_READY_RSP[] = "READY";//"+SIM READY";
-
 /************************* Basic CMD *************************/
 char LTE_AT_AT[] = "AT";
 char LTE_AT_ECHO[] = "E";
@@ -28,6 +24,16 @@ char LTE_AT_FUNC[] = "CFUN";
 
 char LTE_AT_NET_REG[] = "CEREG";
 char LTE_AT_CALL[] = "MIPCALL";
+
+
+/************************* RSP *************************/
+
+
+char LTE_AT_OK_RSP[] = "OK";
+char LTE_AT_ERR_RSP[] = "ERROR";
+char LTE_AT_SIM_READY_RSP[] = "READY";//"+SIM READY";
+char LTE_AT_CSQ_RSP[] = "+CSQ:";
+
 
 #if 0
 /************************* MQTT CMD*************************/
@@ -76,6 +82,7 @@ usefulLen: the len of cmdBuf which actually used
 bool Fibocom_AT_Assemble_Basic(LTE_AT_INDEX id, LTE_AT_TYPE type, int param, char cmdBuf[], int bufMaxLen, int *usefulLen)
 {
     memset(cmdBuf, 0, bufMaxLen);
+    *usefulLen = 0;
 
     if(id == LTE_AT_INDEX_AT)
     {
@@ -99,6 +106,17 @@ bool Fibocom_AT_Assemble_Basic(LTE_AT_INDEX id, LTE_AT_TYPE type, int param, cha
         }
         else if(type == LTE_AT_QUERY)
             sprintf(cmdBuf, "%s+%s=?\r\n", LTE_AT_AT, LTE_AT_SIM_PIN);
+    }
+    else if(id == LTE_AT_INDEX_CSQ)
+    {
+        if(type == LTE_AT_READ)
+            sprintf(cmdBuf, "%s+%s\r\n", LTE_AT_AT, LTE_AT_CSQ);
+        else if(type == LTE_AT_QUERY)
+            sprintf(cmdBuf, "%s+%s=?\r\n", LTE_AT_AT, LTE_AT_CSQ);
+    }
+    else
+    {
+        return false;
     }
 
     *usefulLen = strlen(cmdBuf);

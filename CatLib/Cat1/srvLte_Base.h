@@ -13,19 +13,21 @@ class clsLteBaseIf;
 
 typedef void (clsLteBaseIf::*MemberMemberFunPtrTemplate)(void);
 
-#define LET_INVALID_INDEX   (-1)
+#define LTE_INVALID_INDEX   (-1)
 
-#define LET_RAW_FIFO_MAX             (200)
+#define LTE_RAW_FIFO_MAX             (200)
 
-#define LET_MSG_FIFO_MAX_COUNT       (5)
-#define LET_MSG_FIFO_MAX_BYTES       (100)
+#define LTE_MSG_FIFO_MAX_COUNT       (5)
+#define LTE_MSG_FIFO_MAX_BYTES       (100)
 
-#define LET_KEEPALIVE_ARRAY_COUNT       (10)
+#define LTE_KEEPALIVE_ARRAY_COUNT       (10)
+
+#define LTE_SENDBUFFER_BYTES        (100)
 
 typedef struct
 {
     volatile bool isLock;
-    uint8_t array[LET_RAW_FIFO_MAX];
+    uint8_t array[LTE_RAW_FIFO_MAX];
     int16_t head;
     int16_t tail;
 } LteRawFifoStructure; // 存放原始数据的buffer
@@ -34,9 +36,9 @@ typedef struct
 {
     volatile bool isLock;
 
-    uint8_t msg[LET_MSG_FIFO_MAX_COUNT][LET_MSG_FIFO_MAX_BYTES];
-    uint32_t msgLen[LET_MSG_FIFO_MAX_COUNT];
-    int16_t timeout[LET_MSG_FIFO_MAX_COUNT]; // for recv, useless
+    uint8_t msg[LTE_MSG_FIFO_MAX_COUNT][LTE_MSG_FIFO_MAX_BYTES];
+    uint32_t msgLen[LTE_MSG_FIFO_MAX_COUNT];
+    int16_t timeout[LTE_MSG_FIFO_MAX_COUNT]; // for recv, useless
 
     int16_t head;
     int16_t tail;
@@ -53,29 +55,41 @@ typedef struct
 typedef struct
 {
     int32_t step;
-    bool isFirst;
 
     LTE_AT_INDEX cmd;
     LTE_AT_TYPE type;
     int32_t para;
 
-    int32_t tryTimes;
     int32_t reloadTryTimes;
 
-    int32_t timeout_ms;
     int32_t reloadTimeout_ms;
 
-    bool isRecved;
     bool isSucceed;
 
-    int32_t timewait_ms;
-    int32_t reloadtimewait_ms;
+    int32_t reloadtimewait_ms; // wait before excute next cmd
 
     int32_t stepAfterSucceed;
     int32_t stepAfterFailed;
 
 } LteKeepAliveStruct;
 #pragma pack()
+
+
+#pragma pack(4)
+typedef struct
+{
+    int32_t nowStep;
+
+    bool isRecved;
+
+    int32_t timeout;
+    int32_t tryTimes;
+
+    int32_t waitBeforeNextStep; // 需要大于0
+
+} LteKeepAliveStateMachine;
+#pragma pack()
+
 
 class clsLteBaseIf
 {
@@ -112,6 +126,9 @@ private: // 和通信总线的信息交互
     friend void Friend_Uart_Recv(uint8_t *msg, uint32_t len);
 
 private:
+    uint8_t m_sendBuffer[LTE_SENDBUFFER_BYTES];
+    int32_t m_sendLen;
+
     LteRawFifoStructure m_rawDataFifo; // 收到的消息全部存这里，后续从这里来拆包
 
     // 发送消息队列，基础状态管理，这个队列中的消息优先发送
@@ -146,8 +163,9 @@ private:
 
 
 private:
-    uint32_t m_nowStep;
-    LteKeepAliveStruct m_keepAliveStatusArray[LET_KEEPALIVE_ARRAY_COUNT];
+    LteKeepAliveStateMachine m_KASM;
+
+    LteKeepAliveStruct m_keepAliveStatusArray[LTE_KEEPALIVE_ARRAY_COUNT];
 
     void KA_StatusArrayInit(void);
 
