@@ -55,7 +55,7 @@ typedef enum _LTE_AT_INDEX
     // LTE_AT_INDEX_ATI,
     // LTE_AT_INDEX_FILE,
     // LTE_AT_INDEX_FILE_DEL,
-    
+
     // LTE_AT_INDEX_FUNC,
 
     // LTE_AT_INDEX_NET_REG,

@@ -114,7 +114,7 @@ bool Fibocom_AT_Assemble_Basic(LTE_AT_INDEX id, LTE_AT_TYPE type, int param, cha
         else if(type == LTE_AT_QUERY)
             sprintf(cmdBuf, "%s+%s=?\r\n", LTE_AT_AT, LTE_AT_CSQ);
     }
-    else if (id == LTE_AT_INDEX_NET_REG)
+    else if(id == LTE_AT_INDEX_NET_REG)
     {
         if(type == LTE_AT_READ)
             sprintf(cmdBuf, "%s+%s?\r\n", LTE_AT_AT, LTE_AT_NET_REG);

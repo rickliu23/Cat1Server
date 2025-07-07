@@ -6,8 +6,9 @@ extern "C" {
 #endif
 
 #include "Lte_Basic.h"
-#include "srvLte_Interface.h"
 
+#include "srvLte_Interface.h"
+#include "srvLte_Keeper.h"
 
 
 class clsLteIf
@@ -42,8 +43,12 @@ private:
 
 
     clsLteInterfaceIf *m_pInterfaceObj;
+    clsLteKeeperIf *m_pKeeperObj;
 
-
+    // Êý¾ÝÔÝ´æÇø
+    uint8_t m_CmdBuf[LTE_MSG_MAX_BYTES];
+    uint32_t m_CmdBufLen;
+    int32_t m_timeout;
 };
 
 #ifdef __cplusplus

@@ -5,14 +5,16 @@
 extern "C" {
 #endif
 
-
+// 单条信息的最大长度
+#define LTE_MSG_MAX_BYTES              (30)
+    
 /* 原始数据buffer大小，用于存放LTE吐出的原始数据 */
-#define LTE_RAW_FIFO_MAX_BYTES             (200)
+#define LTE_RAW_FIFO_MAX_BYTES             (100)
 
 
-/* 消息队列大小，count用于指定消息条数上限，max_bytee用于指定每条消息的大小上限  */
+/* 消息队列大小，count用于指定消息条数上限  */
 #define LTE_MSG_FIFO_MAX_COUNT              (5)
-#define LTE_MSG_FIFO_MAX_BYTES              (100)
+
 
 
 /* 物理总线上接收超时时间，超时后开始处理接收消息  */

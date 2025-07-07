@@ -107,11 +107,6 @@ int main(void)
 
   HW_UART_Start_Recv();
 
-  HW_LTE_Disable();
-  HAL_Delay(100);
-  HW_LTE_Enable();
-  HAL_Delay(5000);
-  
   Main_Init();
 
   /* USER CODE END 2 */

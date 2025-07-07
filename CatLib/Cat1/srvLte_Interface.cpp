@@ -2,6 +2,9 @@
 #include <string.h>
 #include "Lte_Basic.h"
 #include "LteUartPort.h"
+#include <stdio.h>
+
+bool ffffffff = false;
 
 /************************************ 接收数据 raw data 存储区 ************************************/
 void LteRawFifoStructure::MsgInit(void)
@@ -47,14 +50,14 @@ bool LteRawFifoStructure::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut)
         return false;
     }
 
-    if(msg == NULL || lenIn < LTE_MSG_FIFO_MAX_BYTES)
+    if(msg == NULL || lenIn < LTE_MSG_MAX_BYTES)
     {
         return false;
     }
 
     bool isNeedClear = false;;
     char *pos = NULL;
-    int16_t startIndex = 0, endInedx = 0;
+    int32_t startIndex = 0, endInedx = 0;
 
     char cmdStart[] = "AT";
     char cmdEnd[] = "\r\n";
@@ -68,8 +71,12 @@ bool LteRawFifoStructure::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut)
         // 起点下标
         startIndex = (uint32_t)pos - (uint32_t)m_array;
 
+//        char info[20];
+//        sprintf(info, "start: %d\r\n", startIndex);
+//        HW_Printf(info);
+
         // 剩余的有效字节数量
-        int16_t lenLeft = (uint32_t)m_head - (uint32_t)(m_array + startIndex);
+        int16_t lenLeft = (uint32_t)m_head - (uint32_t)(m_array) + startIndex;
 
         /********** 尝试拆出终点 **********/
 
@@ -101,6 +108,9 @@ bool LteRawFifoStructure::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut)
                 m_tail = endInedx;
             }
         }
+
+//        sprintf(info, "end: %d\r\n", endInedx);
+//        HW_Printf(info);
     }
     else // 无起点
     {
@@ -113,6 +123,10 @@ bool LteRawFifoStructure::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut)
     }
 
     m_isLock = false;
+
+//    char info[20];
+//    sprintf(info, "len: %d\r\n", lenOut);
+//    HW_Printf(info);
 
     if(lenOut)
     {
@@ -138,26 +152,26 @@ void LteMsgFifoStructure::MsgInit(void)
 
 bool LteMsgFifoStructure::MsgPush(uint8_t *msg, uint32_t lenIn)
 {
-    uint32_t timeout = 0;
+    int32_t timeout = 0;
 
     return MsgPush(msg, lenIn, timeout);
 }
 
 bool LteMsgFifoStructure::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut)
 {
-    uint32_t timeout = 0;
+    int32_t timeout = 0;
 
     return MsgPop(msg, lenIn, lenOut, timeout);
 }
 
-bool LteMsgFifoStructure::MsgPush(uint8_t *msg, uint32_t lenIn, uint32_t timeout_ms)
+bool LteMsgFifoStructure::MsgPush(uint8_t *msg, uint32_t lenIn, int32_t timeout_ms)
 {
     if(m_head == LTE_INVALID_INDEX || m_isLock == true)
     {
         return false;
     }
 
-    if(lenIn > LTE_MSG_FIFO_MAX_BYTES)
+    if(lenIn > LTE_MSG_MAX_BYTES)
     {
         return false;
     }
@@ -179,14 +193,14 @@ bool LteMsgFifoStructure::MsgPush(uint8_t *msg, uint32_t lenIn, uint32_t timeout
     return true;
 }
 
-bool LteMsgFifoStructure::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut, uint32_t &timeout_ms)
+bool LteMsgFifoStructure::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut, int32_t &timeout_ms)
 {
     if(m_tail == LTE_INVALID_INDEX || m_isLock == true)
     {
         return false;
     }
 
-    if(lenIn < LTE_MSG_FIFO_MAX_BYTES)
+    if(lenIn < LTE_MSG_MAX_BYTES)
     {
         return false;
     }
@@ -211,6 +225,8 @@ bool LteMsgFifoStructure::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut,
 
     return true;
 }
+
+
 /************************************ 消息队列 END ************************************/
 
 
@@ -245,7 +261,7 @@ void clsLteInterfaceIf::OnTimerFast(void)
 
 void clsLteInterfaceIf::OnTimer(void)
 {
-    SendDataProcess();
+    SendDataProcess(100);
 }
 
 void clsLteInterfaceIf::OnTimerSlow(void)
@@ -253,7 +269,7 @@ void clsLteInterfaceIf::OnTimerSlow(void)
 
 }
 
-bool clsLteInterfaceIf::MsgPush(Enum_LteMsgType type, uint8_t *msg, uint32_t lenIn, uint32_t timeout_ms)
+bool clsLteInterfaceIf::MsgPush(Enum_LteMsgType type, uint8_t *msg, uint32_t lenIn, int32_t timeout_ms)
 {
     if(type == Enum_LteNetInfo)
     {
@@ -264,30 +280,49 @@ bool clsLteInterfaceIf::MsgPush(Enum_LteMsgType type, uint8_t *msg, uint32_t len
         return m_otherSendFifo.MsgPush(msg, lenIn, timeout_ms);
     }
 }
+
+
+bool clsLteInterfaceIf::MsgPop(Enum_LteMsgType &type, uint8_t *msg, uint32_t lenIn, uint32_t &lenOut)
+{
+    bool res;
+    type = Enum_LteNetInfo;
+    res = m_recvFifo.MsgPop(msg, lenIn, lenOut);
+
+    return res;
+}
+
 /************************************ private ************************************/
 void clsLteInterfaceIf::Clear(void)
 {
+    m_timeout = 0;
+
     m_rawData.MsgInit();
-    
+
     m_netSendFifo.MsgInit();
     m_otherSendFifo.MsgInit();
-    
+
     m_recvFifo.MsgInit();
-    
+
     timerCount = 0x7FFFFFFF;
 }
 
-void clsLteInterfaceIf::SendDataProcess(void)
+void clsLteInterfaceIf::SendDataProcess(uint32_t time_ms)
 {
-    if(m_netSendFifo.MsgPop(m_sendCmdBuf, LTE_MSG_FIFO_MAX_BYTES, m_sendCmdBufLen, timeout_ms) != true)
+    if(m_timeout > 0)
     {
-        if(m_otherSendFifo.MsgPop(m_sendCmdBuf, LTE_MSG_FIFO_MAX_BYTES, m_sendCmdBufLen, timeout_ms) != true)
+        m_timeout -= time_ms;
+        return;
+    }
+
+    if(m_netSendFifo.MsgPop(m_sendCmdBuf, LTE_MSG_MAX_BYTES, m_sendCmdBufLen, m_timeout) != true)
+    {
+        if(m_otherSendFifo.MsgPop(m_sendCmdBuf, LTE_MSG_MAX_BYTES, m_sendCmdBufLen, m_timeout) != true)
         {
             return;
         }
     }
-    
-    HW_Printf("Send to module\r\n");
+
+    HW_Printf("Send cmd:\r\n");
     for(int i = 0; i < m_sendCmdBufLen; i++)
     {
         HW_DEBUG_Transmit((uint8_t *)(m_sendCmdBuf + i), 1);
@@ -310,8 +345,10 @@ void friend_RawDataRecv(uint8_t *msg, uint32_t lenIn)
 void clsLteInterfaceIf::RawDataProcess(void)
 {
     // 拆包
-    while(m_rawData.MsgPop(m_recvCmdBuf, LTE_MSG_FIFO_MAX_BYTES, m_recvCmdBufLen) == true)
+    while(m_rawData.MsgPop(m_recvCmdBuf, LTE_MSG_MAX_BYTES, m_recvCmdBufLen) == true)
     {
+
+        HW_Printf("Recv cmd:\r\n");
         for(int i = 0; i < m_recvCmdBufLen; i++)
         {
             HW_DEBUG_Transmit((uint8_t *)(m_recvCmdBuf + i), 1);

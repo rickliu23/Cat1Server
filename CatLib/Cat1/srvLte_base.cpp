@@ -323,7 +323,7 @@ void clsLteBaseIf::Msg_RawDataProcess()
         return;
     }
 
-    char cmdBufTemp[LTE_MSG_FIFO_MAX_BYTES] = { 0 };
+    char cmdBufTemp[LTE_MSG_MAX_BYTES] = { 0 };
     int16_t cmdBufLen = 0;
 
     char *pos = NULL;

@@ -1,0 +1,122 @@
+#ifndef _SRVLTE_KEEPER_H_
+#define _SRVLTE_KEEPER_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "Lte_Basic.h"
+#include "srvLte_Interface.h"
+
+/************************************ 当前信息发送状态保存 ************************************/
+#pragma pack(4)
+typedef struct
+{
+    bool isWaitingForPop;
+    bool isWaitingForReply;
+
+    int32_t timeout;
+
+    uint8_t msgBuf[LTE_MSG_MAX_BYTES];
+    uint32_t msgLen;
+
+} LteMsgStatus;
+#pragma pack()
+
+/************************************ 模块基础状态维护区 ************************************/
+#pragma pack(4)
+typedef struct
+{
+    bool flag;
+
+    int32_t retryTimesLeft;
+
+    bool isExecPeriodically;
+    int32_t periodLeft_s;
+
+    int32_t timeoutReloadValue;
+    int32_t retryTimesReloadValue;
+    int32_t periodReloadValue_s;
+
+} LteModuleStatusStruct;
+#pragma pack()
+
+
+
+#pragma pack(4)
+typedef struct
+{
+    LteModuleStatusStruct isPowerOn;
+
+    LteModuleStatusStruct isModuleReachable; // 和模块是否成功通信
+
+    LteModuleStatusStruct isEchoOn; // 回显是否打开
+
+    LteModuleStatusStruct isSimExist; // sim卡是否存在
+
+    LteModuleStatusStruct isCSQ; // 信号状态
+
+    LteModuleStatusStruct isReg; // 注册状态
+
+    LTE_RSSI_LEVEL rssi; // 当前信号状况
+
+} LteModuleStatus;
+#pragma pack()
+
+
+/************************************ 模块基础状态维护类 ************************************/
+class clsLteKeeperIf
+{
+public:
+    clsLteKeeperIf()
+    {
+    }
+
+    ~clsLteKeeperIf()
+    {
+    }
+
+    /** @brief Get the singalton instance */
+    static clsLteKeeperIf *GetInstance(void);
+
+public:
+    /** @brief Lte service interface init/start/stop/100ms/1000ms tick methods */
+    void Init(void);
+    void Start(void);
+    void Stop(void);
+
+    void OnTimerFast(void);
+    void OnTimer(void);
+    void OnTimerSlow(void);
+
+    // 定时来这个类中取数据，看是否需要发送
+    bool MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut, int32_t &timeout_ms);
+
+    // 收到消息，需要这个类来处理
+    void MsgProcess(uint8_t *msg, uint32_t lenIn);
+
+private:
+    void Clear(void);
+
+    void PowerOff(void);
+    void PowerOn(void);
+
+    void ModuleStatusInit(void);
+
+    void WaitAndFindNextMsg(uint32_t time_ms);
+
+private:
+    LteMsgStatus m_msgStatus;
+
+    LteModuleStatus m_moduleStatus; // 模块状态保存
+
+private:
+
+
+};
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
