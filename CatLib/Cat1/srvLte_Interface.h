@@ -94,7 +94,7 @@ public:
     // 要发送的数据，一律通过该函数塞进来
     bool MsgPush(Enum_LteMsgType type, uint8_t *msg, uint32_t lenIn, int32_t timeout_ms);
 
-    bool MsgPop(Enum_LteMsgType &type, uint8_t *msg, uint32_t lenIn, uint32_t &lenOut);
+    bool MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut);
 
 private:
     void Clear(void);

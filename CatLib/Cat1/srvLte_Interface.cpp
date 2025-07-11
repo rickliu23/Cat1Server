@@ -282,10 +282,9 @@ bool clsLteInterfaceIf::MsgPush(Enum_LteMsgType type, uint8_t *msg, uint32_t len
 }
 
 
-bool clsLteInterfaceIf::MsgPop(Enum_LteMsgType &type, uint8_t *msg, uint32_t lenIn, uint32_t &lenOut)
+bool clsLteInterfaceIf::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut)
 {
     bool res;
-    type = Enum_LteNetInfo;
     res = m_recvFifo.MsgPop(msg, lenIn, lenOut);
 
     return res;
