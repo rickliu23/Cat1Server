@@ -81,7 +81,7 @@ void clsLteIf::OnTimer(void)
     m_pKeeperObj->OnTimer();
 
     // 获取keeper中需要发送的信息
-    if(m_pKeeperObj->MsgPop(m_CmdBuf, sizeof(LTE_MSG_MAX_BYTES), m_CmdBufLen, m_timeout))
+    if(m_pKeeperObj->MsgPop(m_CmdBuf, LTE_MSG_MAX_BYTES, m_CmdBufLen, m_timeout))
     {
         m_pInterfaceObj->MsgPush(Enum_LteNetInfo, (uint8_t *)m_CmdBuf, m_CmdBufLen, m_timeout);
     }
@@ -89,12 +89,11 @@ void clsLteIf::OnTimer(void)
     // 从接口类中获取数据
     if(m_pInterfaceObj->MsgPop((uint8_t *)m_CmdBuf, sizeof(m_CmdBuf), m_CmdBufLen))
     {
-        HW_Printf("recv :\r\n");
-        for(int i = 0; i < m_CmdBufLen; i++)
-        {
-            HW_DEBUG_Transmit((uint8_t *)(m_CmdBuf + i), 1);
-        }
-
+//        HW_Printf("recv :\r\n");
+//        for(int i = 0; i < m_CmdBufLen; i++)
+//        {
+//            HW_DEBUG_Transmit((uint8_t *)(m_CmdBuf + i), 1);
+//        }
 
         m_pKeeperObj->MsgProcess(m_CmdBuf, m_CmdBufLen);
     }

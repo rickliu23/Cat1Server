@@ -67,3 +67,55 @@ char *my_strrstr(const char *s1, int len, const char *s2)
 
     return last_occurrence;
 }
+
+bool find_nth_num(const char *s1, int lenIn, int nth, int &numOut)
+{
+    if(nth <= 0)
+    {
+        return false;
+    }
+
+    int order = 0; // 标记这是当前的第几个数值
+
+    bool isContinuous = false; // 比较当前碰到的数字是否连续
+    int num = 0;
+
+    for(int i = 0; i < lenIn; i++)
+    {
+        if(s1[i] >= '0' && s1[i] <= '9')
+        {
+            if(isContinuous == false) // 这是当前数值的第一个数字
+            {
+                order++;
+
+                isContinuous = true;
+
+                num = s1[i] - '0';
+            }
+            else
+            {
+                num = num * 10 + (s1[i] - '0');
+            }
+        }
+        else
+        {
+            isContinuous = false;
+        }
+
+        if(isContinuous == false && order == nth)
+        {
+            numOut = num;
+
+            return true;
+        }
+    }
+
+    if(isContinuous && order == nth) // 当前字符串的最后一个字符仍然是数字，所以在循环内没有结束
+    {
+        numOut = num;
+
+        return true;
+    }
+
+    return false;
+}

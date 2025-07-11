@@ -7,6 +7,7 @@ extern "C" {
 
 #include "Lte_Basic.h"
 #include "srvLte_Interface.h"
+#include "Fibocom_AT.h"
 
 /************************************ 当前信息发送状态保存 ************************************/
 #pragma pack(4)
@@ -58,7 +59,9 @@ typedef struct
 
     LteModuleStatusStruct isReg; // 注册状态
 
-    LTE_RSSI_LEVEL rssi; // 当前信号状况
+    LteModuleStatusStruct end; // 仅用作结尾标志
+
+    LTE_RSSI rssi; // 当前信号状况
 
 } LteModuleStatus;
 #pragma pack()
@@ -102,13 +105,19 @@ private:
     void PowerOn(void);
 
     void ModuleStatusInit(void);
+    void ModuleStatusResetPeriodically(uint32_t t_s);
 
     void WaitAndFindNextMsg(uint32_t time_ms);
+
+    void AT_CsqProcess(uint8_t *msg, uint32_t lenIn);
+    bool AT_RegProcess(uint8_t *msg, uint32_t lenIn);
 
 private:
     LteMsgStatus m_msgStatus;
 
     LteModuleStatus m_moduleStatus; // 模块状态保存
+
+    LTE_AT_INDEX m_nowCmd;
 
 private:
 

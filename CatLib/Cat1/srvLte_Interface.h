@@ -138,7 +138,7 @@ private:
 
     // 这里测试用，以后换掉
 private:
-#define LTE_TIMER_TIMEOUT   (100) // 物理总线上没消息，开始处理目前接收到的消息
+
     int32_t timerCount;
     void Timer_Reset(void);
     void Timer_TimeCount(uint32_t time_ms);

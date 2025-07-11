@@ -14,7 +14,7 @@ extern "C" {
 
 /************************* RSP *************************/
 
-// ģ�鸴λ����֮���������͸�ָ��
+// 模块复位结束之后主动发送该指令
 extern char LTE_AT_MODULE_READY_RSP[];
 
 /************************* Basic CMD *************************/
@@ -31,6 +31,7 @@ extern char LTE_AT_OK_RSP[];
 extern char LTE_AT_ERR_RSP[];
 extern char LTE_AT_SIM_READY_RSP[];
 extern char LTE_AT_CSQ_RSP[];
+extern char LTE_AT_REG_RSP[];
 
 
 typedef enum _LTE_AT_TYPE
@@ -46,11 +47,11 @@ typedef enum _LTE_AT_INDEX
 {
     LTE_AT_INDEX_UNKNOW = 0,
 
-    LTE_AT_INDEX_AT = 1, // AT����ͨ��
-    LTE_AT_INDEX_ECHO, // �򿪻���
-    LTE_AT_INDEX_SIM_PIN, // ��ѯsim���Ƿ����
-    LTE_AT_INDEX_CSQ, // ��ѯ�ź�ǿ��
-    LTE_AT_INDEX_NET_REG, // ����ע��
+    LTE_AT_INDEX_AT = 1, // AT测试通信
+    LTE_AT_INDEX_ECHO, // 打开回显
+    LTE_AT_INDEX_SIM_PIN, // 查询sim卡是否存在
+    LTE_AT_INDEX_CSQ, // 查询信号强度
+    LTE_AT_INDEX_NET_REG, // 网络注册
 
     // LTE_AT_INDEX_ATI,
     // LTE_AT_INDEX_FILE,

@@ -9,7 +9,7 @@
 
 /************************* RSP *************************/
 
-// 模块复位结束之后主动发送该指令
+// 妯″潡澶嶄綅缁撴潫涔嬪悗涓诲姩鍙戦�佽鎸囦护
 char LTE_AT_MODULE_READY_RSP[] = "AT command ready";
 
 /************************* Basic CMD *************************/
@@ -33,6 +33,7 @@ char LTE_AT_OK_RSP[] = "OK";
 char LTE_AT_ERR_RSP[] = "ERROR";
 char LTE_AT_SIM_READY_RSP[] = "READY";//"+SIM READY";
 char LTE_AT_CSQ_RSP[] = "+CSQ:";
+char LTE_AT_REG_RSP[] = "+CEREG:";
 
 
 #if 0

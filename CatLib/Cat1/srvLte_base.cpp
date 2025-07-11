@@ -655,7 +655,7 @@ void clsLteBaseIf::KA_MsgProcess(uint8_t *msg, uint32_t len)
 
 void clsLteBaseIf::Timer_Reset(void)
 {
-    timerCount = LTE_TIMER_TIMEOUT;
+    timerCount = LTE_MSG_INTERFACE_RECV_TIMEOUT_MS;
 }
 
 void clsLteBaseIf::Timer_TimeCount(uint32_t time_ms)

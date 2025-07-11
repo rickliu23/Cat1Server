@@ -365,7 +365,7 @@ void clsLteInterfaceIf::RawDataProcess(void)
 
 void clsLteInterfaceIf::Timer_Reset(void)
 {
-    timerCount = LTE_TIMER_TIMEOUT;
+    timerCount = LTE_MSG_INTERFACE_RECV_TIMEOUT_MS;
 }
 
 void clsLteInterfaceIf::Timer_TimeCount(uint32_t time_ms)
