@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-#include "Lte_Basic.h"
+#include "srvLte_Basic.h"
 
 #include "srvLte_Interface.h"
 #include "srvLte_Keeper.h"

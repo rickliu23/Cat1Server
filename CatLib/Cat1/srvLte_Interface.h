@@ -5,8 +5,9 @@
 extern "C" {
 #endif
 
-#include "Lte_Type.h"
-#include "Lte_Def.h"
+#include "srvLte_Type.h"
+#include "srvLte_Def.h"
+#include "srvLte_Basic.h"
 
 #include "stdbool.h"
 #include "stdint.h"
@@ -32,35 +33,6 @@ typedef struct
 
 } LteRawFifoStructure; // 存放原始数据的buffer
 #pragma pack()
-
-/************************************ 消息队列 ************************************/
-#pragma pack(4)
-typedef struct
-{
-    volatile bool m_isLock;
-
-    uint8_t m_msg[LTE_MSG_FIFO_MAX_COUNT][LTE_MSG_MAX_BYTES];
-    uint32_t m_msgLen[LTE_MSG_FIFO_MAX_COUNT];
-
-    /* 针对发送消息使用，不同的消息，预期回复时间有差异 */
-    int32_t m_timeout[LTE_MSG_FIFO_MAX_COUNT];
-
-    int32_t m_head;
-    int32_t m_tail;
-
-    void MsgInit(void);
-
-    // 针对接收消息队列
-    bool MsgPush(uint8_t *msg, uint32_t lenIn);
-    bool MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut);
-
-    // 针对发送消息队列
-    bool MsgPush(uint8_t *msg, uint32_t lenIn, int32_t timeout_ms);
-    bool MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut, int32_t &timeout_ms);
-
-} LteMsgFifoStructure; // 存放完整消息的buffer，放到这里的消息，一定是完整的，不存在粘包
-#pragma pack()
-
 
 /************************************ 交互接口 ************************************/
 typedef enum

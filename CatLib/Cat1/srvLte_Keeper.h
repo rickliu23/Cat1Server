@@ -5,8 +5,11 @@
 extern "C" {
 #endif
 
-#include "Lte_Basic.h"
+#include "srvLte_Type.h"
+#include "srvLte_Def.h"
+    
 #include "srvLte_Interface.h"
+
 #include "Fibocom_AT.h"
 
 /************************************ 当前信息发送状态保存 ************************************/

@@ -1,5 +1,5 @@
-#ifndef _LTE_TYPE_H_
-#define _LTE_TYPE_H_
+#ifndef _srvLte_Type_H_
+#define _srvLte_Type_H_
 
 #ifdef __cplusplus
 extern "C" {

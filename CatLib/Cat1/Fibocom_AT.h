@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 #include "stdbool.h"
-#include "Lte_def.h"
+#include "srvLte_Def.h"
 
 typedef enum _LTE_AT_TYPE
 {

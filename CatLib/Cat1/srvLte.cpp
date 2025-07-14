@@ -4,7 +4,7 @@
 #include "stdbool.h"
 #include "stdint.h"
 #include "Fibocom_AT.h"
-#include "Lte_Basic.h"
+#include "srvLte_Basic.h"
 #include "srvLte_Interface.h"
 #include "LteUartPort.h"
 
