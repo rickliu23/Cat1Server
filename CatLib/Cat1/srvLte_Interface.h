@@ -5,7 +5,8 @@
 extern "C" {
 #endif
 
-#include "Lte_def.h"
+#include "Lte_Type.h"
+#include "Lte_Def.h"
 
 #include "stdbool.h"
 #include "stdint.h"
@@ -98,8 +99,6 @@ public:
 
 private:
     void Clear(void);
-
-
 
     // 看是否有数据需要发送
     void SendDataProcess(uint32_t time_ms);

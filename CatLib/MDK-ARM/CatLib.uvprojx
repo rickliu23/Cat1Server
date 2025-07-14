@@ -529,9 +529,14 @@
               <FilePath>..\Cat1\transfer.h</FilePath>
             </File>
             <File>
-              <FileName>Lte_def.h</FileName>
+              <FileName>Lte_Def.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Cat1\Lte_def.h</FilePath>
+              <FilePath>..\Cat1\Lte_Def.h</FilePath>
+            </File>
+            <File>
+              <FileName>Lte_Type.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Cat1\Lte_Type.h</FilePath>
             </File>
             <File>
               <FileName>Lte_Basic.cpp</FileName>

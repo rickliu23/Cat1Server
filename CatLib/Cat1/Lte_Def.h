@@ -18,7 +18,7 @@ extern "C" {
 
 
 /* 串口接收超时时间，超时后开始处理接收消息  */
-#define LTE_MSG_INTERFACE_RECV_TIMEOUT_MS   (50)
+#define LTE_MSG_INTERFACE_RECV_TIMEOUT_MS   (20)
 
 
 
@@ -43,7 +43,7 @@ extern "C" {
 
 #define LTE_TCP_ENABLE                      (0)
 
-#define LTE_MQTT_ENABLE                     (0)
+#define LTE_MQTT_ENABLE                     (1)
 
 
 

@@ -349,7 +349,7 @@ bool clsLteKeeperIf::AT_RegProcess(uint8_t *msg, uint32_t lenIn)
         return false;
     }
 
-    if(stat == 1)
+    if(stat == 1 || stat == 5) // 1 = ×¢²á£¬±¾µØ   5 = ×¢²á£¬ÂþÓÎ
     {
         return true;
     }

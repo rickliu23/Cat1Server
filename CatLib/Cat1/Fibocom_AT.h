@@ -6,16 +6,16 @@ extern "C" {
 #endif
 
 #include "stdbool.h"
+#include "Lte_def.h"
 
+typedef enum _LTE_AT_TYPE
+{
+    LTE_AT_READ,
+    LTE_AT_WRITE,
+    LTE_AT_QUERY,
+    LTE_AT_NUM
+} LTE_AT_TYPE;
 
-
-
-
-
-/************************* RSP *************************/
-
-// 模块复位结束之后主动发送该指令
-extern char LTE_AT_MODULE_READY_RSP[];
 
 /************************* Basic CMD *************************/
 extern char LTE_AT_AT[];
@@ -25,7 +25,8 @@ extern char LTE_AT_CSQ[] ;
 extern char LTE_AT_NET_REG[];
 
 /************************* RSP *************************/
-
+// 模块复位结束之后主动发送该指令
+extern char LTE_AT_MODULE_READY_RSP[];
 
 extern char LTE_AT_OK_RSP[];
 extern char LTE_AT_ERR_RSP[];
@@ -34,13 +35,7 @@ extern char LTE_AT_CSQ_RSP[];
 extern char LTE_AT_REG_RSP[];
 
 
-typedef enum _LTE_AT_TYPE
-{
-    LTE_AT_READ,
-    LTE_AT_WRITE,
-    LTE_AT_QUERY,
-    LTE_AT_NUM
-} LTE_AT_TYPE;
+
 
 
 typedef enum _LTE_AT_INDEX
@@ -64,6 +59,8 @@ typedef enum _LTE_AT_INDEX
     // // LTE_AT_INDEX_ACTIVE,
     // LTE_AT_INDEX_CALL,
     // LTE_AT_INDEX_UNCALL,
+    
+#if LTE_MQTT_ENABLE == 1
     // LTE_AT_INDEX_MQTT_RECV_MODE,
     // LTE_AT_INDEX_MQTT_SSL_MODE,
     // LTE_AT_INDEX_MQTT_SAVE_CA,
@@ -97,6 +94,8 @@ typedef enum _LTE_AT_INDEX
     // LTE_AT_INDEX_NTP,
     // LTE_AT_INDEX_TIME,
     // LTE_AT_INDEX_DNS,
+#endif
+
     LTE_AT_INDEX_NUM
 } LTE_AT_INDEX;
 

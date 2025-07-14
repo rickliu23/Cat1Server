@@ -92,7 +92,7 @@ public:
     void OnTimer(void);
     void OnTimerSlow(void);
 
-    // 定时来这个类中取数据，看是否需要发送
+    // Regularly retrieve data from this class to determine if sending is required.
     bool MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut, int32_t &timeout_ms);
 
     // 收到消息，需要这个类来处理
@@ -105,6 +105,8 @@ private:
     void PowerOn(void);
 
     void ModuleStatusInit(void);
+
+    /*  */
     void ModuleStatusResetPeriodically(uint32_t t_s);
 
     void WaitAndFindNextMsg(uint32_t time_ms);

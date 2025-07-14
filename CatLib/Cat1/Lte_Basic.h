@@ -10,7 +10,16 @@ extern "C" {
 #include "stdbool.h"
 #include "stdint.h"
 
+/*
+寻找s1字符串中的s2第一次出现的位置
+如果不存在数值，返回NULL
+*/
 char *my_strstr(const char *s1, int len, const char *s2);
+
+/*
+寻找s1字符串中的s2最后一次出现的位置
+如果不存在数值，返回NULL
+*/
 char *my_strrstr(const char *s1, int len, const char *s2);
 
 /*
@@ -20,21 +29,6 @@ char *my_strrstr(const char *s1, int len, const char *s2);
 */
 bool find_nth_num(const char *s1, int lenIn, int nth, int &numOut);
 
-typedef enum
-{
-    LTE_RSSI_LEVEL_0,
-    LTE_RSSI_LEVEL_1,
-    LTE_RSSI_LEVEL_2,
-    LTE_RSSI_LEVEL_3,
-    LTE_RSSI_LEVEL_NUM,
-    LTE_RSSI_LEVEL_INVALID
-} LTE_RSSI_LEVEL;
-
-typedef struct
-{
-    int8_t value;
-    LTE_RSSI_LEVEL level;
-} LTE_RSSI;
 
 #ifdef __cplusplus
 }

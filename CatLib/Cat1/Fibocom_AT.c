@@ -3,15 +3,6 @@
 #include <stdio.h>
 
 
-
-
-
-
-/************************* RSP *************************/
-
-// 模块复位结束之后主动发送该指令
-char LTE_AT_MODULE_READY_RSP[] = "AT command ready";
-
 /************************* Basic CMD *************************/
 char LTE_AT_AT[] = "AT";
 char LTE_AT_ECHO[] = "E";
@@ -27,7 +18,8 @@ char LTE_AT_CALL[] = "MIPCALL";
 
 
 /************************* RSP *************************/
-
+// 模块复位结束之后主动发送该指令
+char LTE_AT_MODULE_READY_RSP[] = "AT command ready";
 
 char LTE_AT_OK_RSP[] = "OK";
 char LTE_AT_ERR_RSP[] = "ERROR";

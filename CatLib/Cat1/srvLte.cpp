@@ -21,8 +21,6 @@ void clsLteIf::Init(void)
 {
     m_pInterfaceObj = clsLteInterfaceIf::GetInstance();
     m_pKeeperObj = clsLteKeeperIf::GetInstance();
-
-    HW_Printf("Lte_Init\r\n");
 }
 
 void clsLteIf::Start(void)
@@ -40,17 +38,9 @@ void clsLteIf::Start(void)
     m_pKeeperObj->Init();
     m_pKeeperObj->Start();
 
-//    char msg[20] = { 0 } ;
-//    int len;
-
     isEnabled = true;
 
     HW_Printf("Lte_Start\r\n");
-
-//    Fibocom_AT_Assemble_Basic(LTE_AT_INDEX_AT, LTE_AT_READ, 0, msg, sizeof(msg), &len);
-//    m_pInterfaceObj->MsgPush(Enum_LteNetInfo, (uint8_t *)msg, len, 300);
-//    m_pInterfaceObj->MsgPush(Enum_LteNetInfo, (uint8_t *)msg, len, 300);
-//    m_pInterfaceObj->MsgPush(Enum_LteNetInfo, (uint8_t *)msg, len, 300);
 }
 
 void clsLteIf::Stop(void)
@@ -89,13 +79,10 @@ void clsLteIf::OnTimer(void)
     // 从接口类中获取数据
     if(m_pInterfaceObj->MsgPop((uint8_t *)m_CmdBuf, sizeof(m_CmdBuf), m_CmdBufLen))
     {
-//        HW_Printf("recv :\r\n");
-//        for(int i = 0; i < m_CmdBufLen; i++)
-//        {
-//            HW_DEBUG_Transmit((uint8_t *)(m_CmdBuf + i), 1);
-//        }
-
-        m_pKeeperObj->MsgProcess(m_CmdBuf, m_CmdBufLen);
+        if (MsgClassify(m_CmdBuf, m_CmdBufLen) == enum_lteKeeper)
+        {
+            m_pKeeperObj->MsgProcess(m_CmdBuf, m_CmdBufLen);
+        }
     }
 }
 
@@ -115,4 +102,10 @@ void clsLteIf::OnTimerSlow(void)
 void clsLteIf::Clear(void)
 {
 
+}
+
+LTE_ENUM_MSG_TYPE clsLteIf::MsgClassify(uint8_t *msg, uint32_t lenIn)
+{
+    
+    return enum_lteKeeper;
 }

@@ -10,6 +10,13 @@ extern "C" {
 #include "srvLte_Interface.h"
 #include "srvLte_Keeper.h"
 
+typedef enum
+{
+    enum_lteKeeper = 0,
+    enum_lteUdp,
+    enum_lteTcp,
+    enum_lteMqtt,
+} LTE_ENUM_MSG_TYPE;
 
 class clsLteIf
 {
@@ -38,9 +45,10 @@ public:
 private:
     void Clear(void);
 
+    LTE_ENUM_MSG_TYPE MsgClassify(uint8_t *msg, uint32_t lenIn);
+
 private:
     bool isEnabled; // 当前类的使能标志位，如果是false，代表用户不需要使用
-
 
     clsLteInterfaceIf *m_pInterfaceObj;
     clsLteKeeperIf *m_pKeeperObj;
