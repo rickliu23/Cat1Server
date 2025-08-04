@@ -12,27 +12,7 @@ extern "C" {
 #include "stdbool.h"
 #include "stdint.h"
 
-/* 消息队列使用，当头指针或者尾指针无效时，置为 INVALID */
-#define LTE_INVALID_INDEX   (-1)
 
-/************************************ 接收数据 raw data 存储区 ************************************/
-#pragma pack(4)
-typedef struct
-{
-    volatile bool m_isLock;
-
-    uint8_t m_array[LTE_RAW_FIFO_MAX_BYTES];
-
-    int32_t m_head;
-    int32_t m_tail;
-    uint32_t m_freeBytes;
-
-    void MsgInit(void);
-    bool MsgPush(uint8_t *msg, uint32_t lenIn);
-    bool MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut);
-
-} LteRawFifoStructure; // 存放原始数据的buffer
-#pragma pack()
 
 /************************************ 交互接口 ************************************/
 typedef enum

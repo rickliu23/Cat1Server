@@ -119,3 +119,228 @@ bool find_nth_num(const char *s1, int lenIn, int nth, int &numOut)
 
     return false;
 }
+
+
+/************************************ 接收数据 raw data 存储区 ************************************/
+void LteRawFifoStructure::MsgInit(void)
+{
+    m_isLock = false;
+    memset(m_array, 0, sizeof(m_array));
+    m_head = 0;
+    m_tail = LTE_INVALID_INDEX;
+}
+
+bool LteRawFifoStructure::MsgPush(uint8_t *msg, uint32_t lenIn)
+{
+    if(m_head == LTE_INVALID_INDEX || m_isLock == true)
+    {
+        return false;
+    }
+
+    if(lenIn > (LTE_RAW_FIFO_MAX_BYTES - m_head))
+    {
+        return false;
+    }
+
+    m_isLock = true;
+
+    // 目前不做循环队列，默认每次都会在满之前把数据处理掉
+    m_tail = m_tail == LTE_INVALID_INDEX ? m_head : m_tail; // 尾指针更新
+
+    memcpy(m_array + m_head, msg, lenIn);
+    m_head += lenIn;
+
+    m_isLock = false;
+
+    return true;
+}
+
+bool LteRawFifoStructure::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut)
+{
+    memset(msg, 0, lenIn);
+    lenOut = 0;
+
+    if(m_tail == LTE_INVALID_INDEX || m_isLock == true)
+    {
+        return false;
+    }
+
+    if(msg == NULL || lenIn < LTE_MSG_MAX_BYTES)
+    {
+        return false;
+    }
+
+    bool isNeedClear = false;;
+    char *pos = NULL;
+    int32_t startIndex = 0, endInedx = 0;
+
+    char cmdStart[] = "AT";
+    char cmdEnd[] = "\r\n";
+
+    m_isLock = true;
+
+    /********** 拆出起点 **********/
+    pos = my_strstr((char *)(m_array + m_tail), m_head - m_tail, cmdStart);
+    if(pos != NULL) // 存在起点
+    {
+        // 起点下标
+        startIndex = (uint32_t)pos - (uint32_t)m_array;
+
+//        char info[20];
+//        sprintf(info, "start: %d\r\n", startIndex);
+//        HW_Printf(info);
+
+        // 剩余的有效字节数量
+        int16_t lenLeft = (uint32_t)m_head - (uint32_t)(m_array) + startIndex;
+
+        /********** 尝试拆出终点 **********/
+
+        // 先尝试，看是否存在第二包数据
+        pos = my_strstr((char *)(m_array + startIndex + 1), lenLeft - 1, cmdStart);
+        if(pos != NULL) // 存在第二包数据
+        {
+            endInedx = (uint32_t)pos - (uint32_t)m_array;
+
+            // 第二包数据之前的内容，均认为是一包数据，copy数据
+            lenOut = endInedx - startIndex;
+            memcpy(msg, m_array + startIndex, lenOut);
+
+            m_tail = endInedx;
+        }
+        else // 不存在第二包数据时，找结尾符号
+        {
+            isNeedClear = true;
+
+            pos = my_strrstr((char *)(m_array + startIndex + 1), lenLeft - 1, cmdEnd);
+            if(pos != NULL) // 存在结尾符号
+            {
+                endInedx = (uint32_t)pos - (uint32_t)m_array + strlen(cmdEnd); // 有效字符需要加上结尾符号
+
+                // copy整包数据
+                lenOut = endInedx - startIndex;
+                memcpy(msg, m_array + startIndex, lenOut);
+
+                m_tail = endInedx;
+            }
+        }
+
+//        sprintf(info, "end: %d\r\n", endInedx);
+//        HW_Printf(info);
+    }
+    else // 无起点
+    {
+        isNeedClear = true;
+    }
+
+    if(isNeedClear)
+    {
+        MsgInit();
+    }
+
+    m_isLock = false;
+
+//    char info[20];
+//    sprintf(info, "len: %d\r\n", lenOut);
+//    HW_Printf(info);
+
+    if(lenOut)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+/************************************ 消息队列 ************************************/
+
+void LteMsgFifoStructure::MsgInit(void)
+{
+    m_isLock = false;
+
+    memset(m_msg, 0, sizeof(m_msg));
+    memset(m_msgLen, 0, sizeof(m_msgLen));
+    memset(m_timeout, 0, sizeof(m_timeout));
+
+    m_head = 0;
+    m_tail = LTE_INVALID_INDEX;
+}
+
+bool LteMsgFifoStructure::MsgPush(uint8_t *msg, uint32_t lenIn)
+{
+    int32_t timeout = 0;
+
+    return MsgPush(msg, lenIn, timeout);
+}
+
+bool LteMsgFifoStructure::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut)
+{
+    int32_t timeout = 0;
+
+    return MsgPop(msg, lenIn, lenOut, timeout);
+}
+
+bool LteMsgFifoStructure::MsgPush(uint8_t *msg, uint32_t lenIn, int32_t timeout_ms)
+{
+    if(m_head == LTE_INVALID_INDEX || m_isLock == true)
+    {
+        return false;
+    }
+
+    if(lenIn > LTE_MSG_MAX_BYTES)
+    {
+        return false;
+    }
+
+    m_isLock = true;
+
+    memcpy(m_msg + m_head, msg, lenIn);
+    m_msgLen[m_head] = lenIn;
+    m_timeout[m_head] = timeout_ms;
+
+    m_tail = m_tail == LTE_INVALID_INDEX ? m_head : m_tail;
+
+    m_head += 1;
+    m_head %= LTE_MSG_FIFO_MAX_COUNT;
+    m_head = m_head == m_tail ? LTE_INVALID_INDEX : m_head;
+
+    m_isLock = false;
+
+    return true;
+}
+
+bool LteMsgFifoStructure::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut, int32_t &timeout_ms)
+{
+    if(m_tail == LTE_INVALID_INDEX || m_isLock == true)
+    {
+        return false;
+    }
+
+    if(lenIn < LTE_MSG_MAX_BYTES)
+    {
+        return false;
+    }
+
+    memset(msg, 0, lenIn);
+    lenOut = 0;
+    timeout_ms = 0;
+
+    m_isLock = true;
+
+    memcpy(msg, m_msg[m_tail], m_msgLen[m_tail]);
+    lenOut = m_msgLen[m_tail];
+    timeout_ms = m_timeout[m_tail];
+
+    m_head = m_head == LTE_INVALID_INDEX ? m_tail : m_head;
+
+    m_tail += 1;
+    m_tail %= LTE_MSG_FIFO_MAX_COUNT;
+    m_tail = m_tail == m_head ? LTE_INVALID_INDEX : m_tail;
+
+    m_isLock = false;
+
+    return true;
+}
+
+
+/************************************ 消息队列 END ************************************/
+

@@ -26,10 +26,7 @@ public:
     {
     }
 
-    /** @brief Get the singalton instance */
-    static clsLteMqttIf *GetInstance(void);
-
-public:
+public: // for state machine
     /** @brief Lte service interface init/start/stop/100ms/1000ms tick methods */
     void Init(void);
     void Start(void);
@@ -45,6 +42,11 @@ public:
     // 收到消息，需要这个类来处理
     void MsgProcess(uint8_t *msg, uint32_t lenIn);
 
+public: // for user
+
+
+
+
 private:
     void Clear(void);
 
@@ -52,9 +54,11 @@ private:
 
     LTE_AT_INDEX m_nowCmd;
 
-private:
+    // 针对用户多条数据发送时使用
+    LteMsgFifoStructure m_msgFifo;
 
-
+    // mqtt id
+    uint32_t m_id;
 };
 
 #ifdef __cplusplus
