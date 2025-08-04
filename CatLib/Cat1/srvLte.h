@@ -7,6 +7,8 @@ extern "C" {
 
 #include "srvLte_Basic.h"
 
+#include "srvLte_Module.h"
+
 #include "srvLte_Interface.h"
 #include "srvLte_Keeper.h"
 
@@ -44,6 +46,8 @@ public:
 
 private:
     void Clear(void);
+
+    clsLteModuleIf *CreateProduct(uint8_t type) { };
 
     LTE_ENUM_MSG_TYPE MsgClassify(uint8_t *msg, uint32_t lenIn);
 
