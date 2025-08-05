@@ -32,9 +32,6 @@ void clsLteIf::Start(void)
         while(1);
     }
 
-    m_pInterfaceObj->Init();
-    m_pInterfaceObj->Start();
-
     m_pKeeperObj->Init();
     m_pKeeperObj->Start();
 
@@ -45,7 +42,6 @@ void clsLteIf::Start(void)
 
 void clsLteIf::Stop(void)
 {
-    m_pInterfaceObj->Stop();
     isEnabled = false;
 }
 

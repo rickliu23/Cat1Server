@@ -6,7 +6,17 @@ extern "C" {
 #endif
 
 #include "stdint.h"
+#include "stdbool.h"
 
+typedef enum
+{
+    LTE_MODEL_INVALID,
+
+    LTE_MODEL_FIBOCOM_MC661,
+
+    LTE_LTE_MODULE_MODEL_MAX
+} LTE_MODULE_MODEL;
+    
 typedef enum
 {
     LTE_RSSI_LEVEL_0,

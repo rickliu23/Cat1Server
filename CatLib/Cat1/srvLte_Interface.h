@@ -24,21 +24,14 @@ typedef enum
 class clsLteInterfaceIf
 {
 public:
-    clsLteInterfaceIf()
-    {
-    }
-
-    ~clsLteInterfaceIf()
-    {
-    }
-
     /** @brief Get the singalton instance */
-    static clsLteInterfaceIf *GetInstance(void);
+    static clsLteInterfaceIf *GetInstance(void) 
+    {
+        static clsLteInterfaceIf instance;
+        return &instance;
+    }
 
-    /** @brief Lte service interface init/start/stop/100ms/1000ms tick methods */
-    void Init(void);
-    void Start(void);
-    void Stop(void);
+    /** @brief Lte service interface 10ms/100ms/1000ms tick methods */
 
     void OnTimerFast(void);
     void OnTimer(void);
@@ -50,6 +43,12 @@ public:
     bool MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut);
 
 private:
+     // disable certain functions
+    clsLteInterfaceIf() { /* add init function here */}
+    ~clsLteInterfaceIf() { }
+    clsLteInterfaceIf(const clsLteInterfaceIf &) { };
+    clsLteInterfaceIf &operator=(const clsLteInterfaceIf &){ return *this; };
+
     void Clear(void);
 
     // 看是否有数据需要发送

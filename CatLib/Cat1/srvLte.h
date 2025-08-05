@@ -14,6 +14,13 @@ extern "C" {
 
 typedef enum
 {
+    enum_lteWaitForModel,
+    enum_lteModelGet,
+    enum_lteNetConnected,
+} LTE_ENUM_STATE;
+
+typedef enum
+{
     enum_lteKeeper = 0,
     enum_lteUdp,
     enum_lteTcp,
@@ -47,7 +54,7 @@ public:
 private:
     void Clear(void);
 
-    clsLteModuleIf *CreateProduct(uint8_t type) { };
+    clsLteModuleIf *CreateProduct(uint8_t type) { return 0;};
 
     LTE_ENUM_MSG_TYPE MsgClassify(uint8_t *msg, uint32_t lenIn);
 
