@@ -1,8 +1,12 @@
 #include "srvLte_Mqtt.h"
 
-
+static clsLteMqttIf m_LteMqttIfObj;
 
 /************************************ public ************************************/
+clsLteMqttIf *clsLteMqttIf::GetInstance(void)
+{
+    return &m_LteMqttIfObj;
+}
 
 void clsLteMqttIf::Init(void)
 {
