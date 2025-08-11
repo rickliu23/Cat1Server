@@ -4,17 +4,38 @@
 #include "LteUartPort.h"
 #include <stdio.h>
 
-#define LTE_INTERFACE_TIME_MAX  (0x7FFFFFFF)
+
+static clsLteInterfaceIf m_LteInterfaceIfObj;
 
 /************************************ public ************************************/
+clsLteInterfaceIf *clsLteInterfaceIf::GetInstance(void)
+{
+    return &m_LteInterfaceIfObj;
+}
+
+void clsLteInterfaceIf::Init(void)
+{
+
+}
+
+void clsLteInterfaceIf::Start(void)
+{
+    Clear();
+}
+
+void clsLteInterfaceIf::Stop(void)
+{
+
+}
+
 void clsLteInterfaceIf::OnTimerFast(void)
 {
-    Timer_TimeCount(LTE_TIMEFAST_TIMEGAP_MS);
+    Timer_TimeCount(10);
 }
 
 void clsLteInterfaceIf::OnTimer(void)
 {
-    SendDataProcess(LTE_TIME_TIMEGAP_MS);
+    SendDataProcess(100);
 }
 
 void clsLteInterfaceIf::OnTimerSlow(void)
@@ -54,19 +75,17 @@ void clsLteInterfaceIf::Clear(void)
 
     m_recvFifo.MsgInit();
 
-    timerCount = LTE_INTERFACE_TIME_MAX;
+    timerCount = 0x7FFFFFFF;
 }
 
 void clsLteInterfaceIf::SendDataProcess(uint32_t time_ms)
 {
-    // waiting for response
     if(m_timeout > 0)
     {
         m_timeout -= time_ms;
         return;
     }
 
-    // try to find msg
     if(m_netSendFifo.MsgPop(m_sendCmdBuf, LTE_MSG_MAX_BYTES, m_sendCmdBufLen, m_timeout) != true)
     {
         if(m_otherSendFifo.MsgPop(m_sendCmdBuf, LTE_MSG_MAX_BYTES, m_sendCmdBufLen, m_timeout) != true)
@@ -81,7 +100,6 @@ void clsLteInterfaceIf::SendDataProcess(uint32_t time_ms)
         HW_DEBUG_Transmit((uint8_t *)(m_sendCmdBuf + i), 1);
     }
 
-    // send by uart
     HW_UART_Transmit(m_sendCmdBuf, m_sendCmdBufLen);
 }
 
@@ -93,7 +111,7 @@ void clsLteInterfaceIf::RawDataRecv(uint8_t *msg, uint32_t lenIn)
 
 void friend_RawDataRecv(uint8_t *msg, uint32_t lenIn)
 {
-    clsLteInterfaceIf::GetInstance()->RawDataRecv(msg, lenIn);
+    m_LteInterfaceIfObj.RawDataRecv(msg, lenIn);
 }
 
 void clsLteInterfaceIf::RawDataProcess(void)
@@ -101,6 +119,7 @@ void clsLteInterfaceIf::RawDataProcess(void)
     // 拆包
     while(m_rawData.MsgPop(m_recvCmdBuf, LTE_MSG_MAX_BYTES, m_recvCmdBufLen) == true)
     {
+
         HW_Printf("Recv cmd:\r\n");
         for(int i = 0; i < m_recvCmdBufLen; i++)
         {
@@ -131,7 +150,7 @@ void clsLteInterfaceIf::Timer_TimeCount(uint32_t time_ms)
         return;
     }
 
-    timerCount = LTE_INTERFACE_TIME_MAX;
+    timerCount = 0x7FFFFFFF;
 
     RawDataProcess(); // 消息接收停止一段时间后，认为消息接收结束，开始进行拆包操作
 }

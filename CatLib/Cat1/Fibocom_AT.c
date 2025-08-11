@@ -10,11 +10,11 @@ char LTE_AT_SIM_PIN[] = "CPIN";
 char LTE_AT_CSQ[] = "CSQ";
 char LTE_AT_NET_REG[] = "CEREG";
 
-char LTE_AT_FUNC[] = "CFUN";
+//char LTE_AT_FUNC[] = "CFUN";
 
 
 
-char LTE_AT_CALL[] = "MIPCALL";
+//char LTE_AT_CALL[] = "MIPCALL";
 
 
 /************************* RSP *************************/
@@ -27,6 +27,29 @@ char LTE_AT_SIM_READY_RSP[] = "READY";//"+SIM READY";
 char LTE_AT_CSQ_RSP[] = "+CSQ:";
 char LTE_AT_REG_RSP[] = "+CEREG:";
 
+
+/************************* MQTT CMD*************************/
+
+char LTE_AT_MQTT[] = "MQTT";
+
+#if LTE_MQTT_ENABLE
+char LTE_AT_MQTT_USER[] = "MQTTUSER"; // set account and password
+char LTE_AT_MQTT_WILL[] = "MQTTWILL"; // 
+
+char LTE_AT_MQTT_OPEN[] = "MQTTOPEN"; // 
+char LTE_AT_MQTT_CLOSE[] = "MQTTCLOSE";
+char LTE_AT_MQTT_BREAK[] = "MQTTBREAK";
+
+char LTE_AT_MQTT_SUB[] = "MQTTSUB"; // subscribe
+char LTE_AT_MQTT_UNSUB[] = "MQTTUMSUB"; // unsubscribe
+
+char LTE_AT_MQTT_PUB[] = "MQTTPUB"; // publish
+
+char LTE_AT_MQTT_MSG_RECV[] = "MQTTMSG"; // 
+
+/************************* MQTT CMD RSP *************************/
+
+#endif
 
 #if 0
 /************************* MQTT CMD*************************/

@@ -7,17 +7,8 @@ extern "C" {
 
 #include "srvLte_Basic.h"
 
-#include "srvLte_Module.h"
-
 #include "srvLte_Interface.h"
 #include "srvLte_Keeper.h"
-
-typedef enum
-{
-    enum_lteWaitForModel,
-    enum_lteModelGet,
-    enum_lteNetConnected,
-} LTE_ENUM_STATE;
 
 typedef enum
 {
@@ -54,7 +45,7 @@ public:
 private:
     void Clear(void);
 
-    clsLteModuleIf *CreateProduct(uint8_t type) { return 0;};
+    void GetMsgAndProcess(void);
 
     LTE_ENUM_MSG_TYPE MsgClassify(uint8_t *msg, uint32_t lenIn);
 

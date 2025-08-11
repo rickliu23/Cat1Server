@@ -24,7 +24,7 @@ extern char LTE_AT_SIM_PIN[];
 extern char LTE_AT_CSQ[] ;
 extern char LTE_AT_NET_REG[];
 
-/************************* RSP *************************/
+/************************* Basic CMD RSP *************************/
 // 模块复位结束之后主动发送该指令
 extern char LTE_AT_MODULE_READY_RSP[];
 
@@ -34,7 +34,24 @@ extern char LTE_AT_SIM_READY_RSP[];
 extern char LTE_AT_CSQ_RSP[];
 extern char LTE_AT_REG_RSP[];
 
+/************************* MQTT CMD *************************/
+extern char LTE_AT_MQTT[];
 
+extern char LTE_AT_MQTT_USER[]; // set account and password
+extern char LTE_AT_MQTT_WILL[]; // 
+
+extern char LTE_AT_MQTT_OPEN[]; // 
+extern char LTE_AT_MQTT_CLOSE[];
+extern char LTE_AT_MQTT_BREAK[];
+
+extern char LTE_AT_MQTT_SUB[]; // subscribe
+extern char LTE_AT_MQTT_UNSUB[]; // unsubscribe
+
+extern char LTE_AT_MQTT_PUB[]; // publish
+
+extern char LTE_AT_MQTT_MSG_RECV[]; // 
+
+/************************* MQTT CMD RSP *************************/
 
 
 

@@ -5,15 +5,11 @@
 extern "C" {
 #endif
 
-#define LTE_TIMEFAST_TIMEGAP_MS              (10)
-#define LTE_TIME_TIMEGAP_MS                 (100)
-#define LTE_TIMESLOW_TIMEGAP_MS             (1000)
-    
 // 单条信息的最大长度
 #define LTE_MSG_MAX_BYTES              (30)
 
 /* 原始数据buffer大小，用于存放LTE吐出的原始数据 */
-#define LTE_RAW_FIFO_MAX_BYTES              (100)
+#define LTE_RAW_FIFO_MAX_BYTES             (100)
 
 
 /* 消息队列大小，count用于指定消息条数上限  */
@@ -47,7 +43,7 @@ extern "C" {
 
 #define LTE_TCP_ENABLE                      (0)
 
-#define LTE_MQTT_ENABLE                     (0)
+#define LTE_MQTT_ENABLE                     (1)
 
 
 

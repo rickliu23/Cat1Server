@@ -32,6 +32,9 @@ void clsLteIf::Start(void)
         while(1);
     }
 
+    m_pInterfaceObj->Init();
+    m_pInterfaceObj->Start();
+
     m_pKeeperObj->Init();
     m_pKeeperObj->Start();
 
@@ -42,6 +45,7 @@ void clsLteIf::Start(void)
 
 void clsLteIf::Stop(void)
 {
+    m_pInterfaceObj->Stop();
     isEnabled = false;
 }
 
@@ -54,6 +58,8 @@ void clsLteIf::OnTimerFast(void)
 
     m_pInterfaceObj->OnTimerFast();
     m_pKeeperObj->OnTimerFast();
+
+    GetMsgAndProcess();
 }
 
 void clsLteIf::OnTimer(void)
@@ -70,15 +76,6 @@ void clsLteIf::OnTimer(void)
     if(m_pKeeperObj->MsgPop(m_CmdBuf, LTE_MSG_MAX_BYTES, m_CmdBufLen, m_timeout))
     {
         m_pInterfaceObj->MsgPush(Enum_LteNetInfo, (uint8_t *)m_CmdBuf, m_CmdBufLen, m_timeout);
-    }
-
-    // 从接口类中获取数据
-    if(m_pInterfaceObj->MsgPop((uint8_t *)m_CmdBuf, sizeof(m_CmdBuf), m_CmdBufLen))
-    {
-        if (MsgClassify(m_CmdBuf, m_CmdBufLen) == enum_lteKeeper)
-        {
-            m_pKeeperObj->MsgProcess(m_CmdBuf, m_CmdBufLen);
-        }
     }
 }
 
@@ -100,8 +97,30 @@ void clsLteIf::Clear(void)
 
 }
 
+void clsLteIf::GetMsgAndProcess(void)
+{
+    // 从接口类中获取数据
+    if(m_pInterfaceObj->MsgPop((uint8_t *)m_CmdBuf, sizeof(m_CmdBuf), m_CmdBufLen))
+    {
+        LTE_ENUM_MSG_TYPE type = MsgClassify(m_CmdBuf, m_CmdBufLen);
+
+        if (type == enum_lteMqtt)
+        {
+            
+        }
+        else if (type == enum_lteKeeper)
+        {
+            m_pKeeperObj->MsgProcess(m_CmdBuf, m_CmdBufLen);
+        }
+    }
+}
+
 LTE_ENUM_MSG_TYPE clsLteIf::MsgClassify(uint8_t *msg, uint32_t lenIn)
 {
-    
+    if (my_strstr((const char *)msg, lenIn, LTE_AT_MQTT))
+    {
+        return enum_lteMqtt;
+    }
+
     return enum_lteKeeper;
 }
