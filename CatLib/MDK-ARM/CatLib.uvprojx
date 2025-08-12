@@ -539,26 +539,6 @@
               <FilePath>..\Cat1\srvLte_Type.h</FilePath>
             </File>
             <File>
-              <FileName>srvLte_Basic.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\Cat1\srvLte_Basic.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>srvLte_Basic.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Cat1\srvLte_Basic.h</FilePath>
-            </File>
-            <File>
-              <FileName>srvLte_Module.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\Cat1\srvLte_Module.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>srvLte_Module.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Cat1\srvLte_Module.h</FilePath>
-            </File>
-            <File>
               <FileName>Fibocom_AT.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Cat1\Fibocom_AT.c</FilePath>
@@ -567,6 +547,16 @@
               <FileName>Fibocom_AT.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\Cat1\Fibocom_AT.h</FilePath>
+            </File>
+            <File>
+              <FileName>srvLte_Basic.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\Cat1\srvLte_Basic.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>srvLte_Basic.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Cat1\srvLte_Basic.h</FilePath>
             </File>
             <File>
               <FileName>srvLte_Interface.cpp</FileName>

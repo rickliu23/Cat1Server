@@ -5,6 +5,8 @@
 extern "C" {
 #endif
 
+#include "Fibocom_AT.h"
+    
 #include "srvLte_Def.h"
 
 #include "stdbool.h"
@@ -79,6 +81,22 @@ typedef struct
     bool MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut, int32_t &timeout_ms);
 
 } LteMsgFifoStructure; // 存放完整消息的buffer：放到这里的消息，一定是完整的，不存在粘包
+#pragma pack()
+
+/************************************ 当前信息发送状态保存 ************************************/
+#pragma pack(4)
+typedef struct
+{
+    bool isWaitingForPop;
+    bool isWaitingForReply;
+
+    LTE_AT_INDEX nowCmd;
+    int32_t timeout;
+
+    uint8_t msgBuf[LTE_MSG_MAX_BYTES];
+    uint32_t msgLen;
+
+} LteMsgStatus;
 #pragma pack()
 
 #ifdef __cplusplus

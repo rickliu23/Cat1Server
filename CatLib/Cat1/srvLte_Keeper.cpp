@@ -76,11 +76,11 @@ bool clsLteKeeperIf::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut, int3
 
 void clsLteKeeperIf::MsgProcess(uint8_t *msg, uint32_t lenIn)
 {
-    if(m_nowCmd == LTE_AT_INDEX_UNKNOW && my_strstr((char *)msg, lenIn, LTE_AT_MODULE_READY_RSP))
+    if(m_msgStatus.nowCmd == LTE_AT_INDEX_UNKNOW && my_strstr((char *)msg, lenIn, LTE_AT_MODULE_READY_RSP))
     {
         m_moduleStatus.isPowerOn.flag = true;
     }
-    else if(m_nowCmd == LTE_AT_INDEX_AT)
+    else if(m_msgStatus.nowCmd == LTE_AT_INDEX_AT)
     {
         if(my_strstr((char *)msg, lenIn, LTE_AT_OK_RSP))
         {
@@ -88,7 +88,7 @@ void clsLteKeeperIf::MsgProcess(uint8_t *msg, uint32_t lenIn)
             m_moduleStatus.isModuleReachable.retryTimesLeft = m_moduleStatus.isModuleReachable.retryTimesReloadValue;
         }
     }
-    else if(m_nowCmd == LTE_AT_INDEX_ECHO && my_strstr((char *)msg, lenIn, LTE_AT_OK_RSP))
+    else if(m_msgStatus.nowCmd == LTE_AT_INDEX_ECHO && my_strstr((char *)msg, lenIn, LTE_AT_OK_RSP))
     {
         if(my_strstr((char *)msg, lenIn, LTE_AT_OK_RSP))
         {
@@ -96,7 +96,7 @@ void clsLteKeeperIf::MsgProcess(uint8_t *msg, uint32_t lenIn)
             m_moduleStatus.isEchoOn.retryTimesLeft = m_moduleStatus.isEchoOn.retryTimesReloadValue;
         }
     }
-    else if(m_nowCmd == LTE_AT_INDEX_SIM_PIN)
+    else if(m_msgStatus.nowCmd == LTE_AT_INDEX_SIM_PIN)
     {
         if(my_strstr((char *)msg, lenIn, LTE_AT_SIM_READY_RSP))
         {
@@ -105,7 +105,7 @@ void clsLteKeeperIf::MsgProcess(uint8_t *msg, uint32_t lenIn)
             m_moduleStatus.isSimExist.periodLeft_s = m_moduleStatus.isSimExist.periodReloadValue_s;
         }
     }
-    else if(m_nowCmd == LTE_AT_INDEX_CSQ)
+    else if(m_msgStatus.nowCmd == LTE_AT_INDEX_CSQ)
     {
         AT_CsqProcess(msg, lenIn);
 
@@ -118,7 +118,7 @@ void clsLteKeeperIf::MsgProcess(uint8_t *msg, uint32_t lenIn)
             m_moduleStatus.isCSQ.periodLeft_s = m_moduleStatus.isCSQ.periodReloadValue_s;
         }
     }
-    else if(m_nowCmd == LTE_AT_INDEX_NET_REG)
+    else if(m_msgStatus.nowCmd == LTE_AT_INDEX_NET_REG)
     {
         if(AT_RegProcess(msg, lenIn) == true)
         {
@@ -128,7 +128,7 @@ void clsLteKeeperIf::MsgProcess(uint8_t *msg, uint32_t lenIn)
         }
     }
 
-    m_nowCmd = LTE_AT_INDEX_UNKNOW;
+    m_msgStatus.nowCmd = LTE_AT_INDEX_UNKNOW;
 }
 
 /************************************ private ************************************/
@@ -214,20 +214,20 @@ void clsLteKeeperIf::WaitAndFindNextMsg(uint32_t time_ms)
         // 超时未收到回复
         m_msgStatus.isWaitingForReply = false;
     }
-    m_nowCmd = LTE_AT_INDEX_UNKNOW;
+    m_msgStatus.nowCmd = LTE_AT_INDEX_UNKNOW;
 
     // 找下一条消息
     if(m_moduleStatus.isPowerOn.flag == false)
     {
         PowerOn();
 
-        m_nowCmd = LTE_AT_INDEX_UNKNOW;
+        m_msgStatus.nowCmd = LTE_AT_INDEX_UNKNOW;
 
         ptr = &m_moduleStatus.isPowerOn;
     }
     else if(m_moduleStatus.isModuleReachable.flag == false)
     {
-        m_nowCmd = LTE_AT_INDEX_AT;
+        m_msgStatus.nowCmd = LTE_AT_INDEX_AT;
 
         isFind = Fibocom_AT_Assemble_Basic(LTE_AT_INDEX_AT, LTE_AT_READ, 0, (char *)m_msgStatus.msgBuf, sizeof(m_msgStatus.msgBuf), (int *)&m_msgStatus.msgLen);
 
@@ -235,7 +235,7 @@ void clsLteKeeperIf::WaitAndFindNextMsg(uint32_t time_ms)
     }
     else if(m_moduleStatus.isEchoOn.flag == false)
     {
-        m_nowCmd = LTE_AT_INDEX_ECHO;
+        m_msgStatus.nowCmd = LTE_AT_INDEX_ECHO;
 
         isFind = Fibocom_AT_Assemble_Basic(LTE_AT_INDEX_ECHO, LTE_AT_WRITE, 1, (char *)m_msgStatus.msgBuf, sizeof(m_msgStatus.msgBuf), (int *)&m_msgStatus.msgLen);
 
@@ -243,7 +243,7 @@ void clsLteKeeperIf::WaitAndFindNextMsg(uint32_t time_ms)
     }
     else if(m_moduleStatus.isSimExist.flag == false)
     {
-        m_nowCmd = LTE_AT_INDEX_SIM_PIN;
+        m_msgStatus.nowCmd = LTE_AT_INDEX_SIM_PIN;
 
         isFind = Fibocom_AT_Assemble_Basic(LTE_AT_INDEX_SIM_PIN, LTE_AT_READ, 0, (char *)m_msgStatus.msgBuf, sizeof(m_msgStatus.msgBuf), (int *)&m_msgStatus.msgLen);
 
@@ -251,7 +251,7 @@ void clsLteKeeperIf::WaitAndFindNextMsg(uint32_t time_ms)
     }
     else if(m_moduleStatus.isCSQ.flag == false)
     {
-        m_nowCmd = LTE_AT_INDEX_CSQ;
+        m_msgStatus.nowCmd = LTE_AT_INDEX_CSQ;
 
         isFind = Fibocom_AT_Assemble_Basic(LTE_AT_INDEX_CSQ, LTE_AT_READ, 0, (char *)m_msgStatus.msgBuf, sizeof(m_msgStatus.msgBuf), (int *)&m_msgStatus.msgLen);
 
@@ -259,7 +259,7 @@ void clsLteKeeperIf::WaitAndFindNextMsg(uint32_t time_ms)
     }
     else if(m_moduleStatus.isReg.flag == false)
     {
-        m_nowCmd = LTE_AT_INDEX_NET_REG;
+        m_msgStatus.nowCmd = LTE_AT_INDEX_NET_REG;
 
         isFind = Fibocom_AT_Assemble_Basic(LTE_AT_INDEX_NET_REG, LTE_AT_READ, 0, (char *)m_msgStatus.msgBuf, sizeof(m_msgStatus.msgBuf), (int *)&m_msgStatus.msgLen);
 

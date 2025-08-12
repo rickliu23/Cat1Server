@@ -12,20 +12,7 @@ extern "C" {
 
 #include "Fibocom_AT.h"
 
-/************************************ 当前信息发送状态保存 ************************************/
-#pragma pack(4)
-typedef struct
-{
-    bool isWaitingForPop;
-    bool isWaitingForReply;
 
-    int32_t timeout;
-
-    uint8_t msgBuf[LTE_MSG_MAX_BYTES];
-    uint32_t msgLen;
-
-} LteMsgStatus;
-#pragma pack()
 
 /************************************ 模块基础状态维护区 ************************************/
 #pragma pack(4)
@@ -121,8 +108,6 @@ private:
     LteMsgStatus m_msgStatus;
 
     LteModuleStatus m_moduleStatus; // 模块状态保存
-
-    LTE_AT_INDEX m_nowCmd;
 
 private:
 
