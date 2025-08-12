@@ -549,14 +549,14 @@
               <FilePath>..\Cat1\Fibocom_AT.h</FilePath>
             </File>
             <File>
-              <FileName>srvLte_Basic.cpp</FileName>
+              <FileName>srvLte_Resource.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\Cat1\srvLte_Basic.cpp</FilePath>
+              <FilePath>..\Cat1\srvLte_Resource.cpp</FilePath>
             </File>
             <File>
-              <FileName>srvLte_Basic.h</FileName>
+              <FileName>srvLte_Resource.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Cat1\srvLte_Basic.h</FilePath>
+              <FilePath>..\Cat1\srvLte_Resource.h</FilePath>
             </File>
             <File>
               <FileName>srvLte_Interface.cpp</FileName>
@@ -577,16 +577,6 @@
               <FileName>srvLte_Keeper.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\Cat1\srvLte_Keeper.h</FilePath>
-            </File>
-            <File>
-              <FileName>srvLte_Mqtt.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\Cat1\srvLte_Mqtt.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>srvLte_Mqtt.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Cat1\srvLte_Mqtt.h</FilePath>
             </File>
             <File>
               <FileName>srvLte.cpp</FileName>

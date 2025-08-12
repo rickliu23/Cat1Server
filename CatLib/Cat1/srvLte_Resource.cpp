@@ -1,4 +1,4 @@
-#include "srvLte_Basic.h"
+#include "srvLte_Resource.h"
 #include <string.h>
 
 /******************************** 自定义的字符串搜索函数 ******************************************/

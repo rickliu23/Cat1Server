@@ -7,7 +7,7 @@ extern "C" {
 
 #include "srvLte_Type.h"
 #include "srvLte_Def.h"
-#include "srvLte_Basic.h"
+#include "srvLte_Resource.h"
 
 #include "stdbool.h"
 #include "stdint.h"

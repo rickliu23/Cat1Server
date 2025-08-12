@@ -632,8 +632,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Cat1\srvLte_Basic.cpp</PathWithFileName>
-      <FilenameWithoutPath>srvLte_Basic.cpp</FilenameWithoutPath>
+      <PathWithFileName>..\Cat1\srvLte_Resource.cpp</PathWithFileName>
+      <FilenameWithoutPath>srvLte_Resource.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -644,8 +644,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Cat1\srvLte_Basic.h</PathWithFileName>
-      <FilenameWithoutPath>srvLte_Basic.h</FilenameWithoutPath>
+      <PathWithFileName>..\Cat1\srvLte_Resource.h</PathWithFileName>
+      <FilenameWithoutPath>srvLte_Resource.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -704,30 +704,6 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Cat1\srvLte_Mqtt.cpp</PathWithFileName>
-      <FilenameWithoutPath>srvLte_Mqtt.cpp</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>5</GroupNumber>
-      <FileNumber>37</FileNumber>
-      <FileType>5</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\Cat1\srvLte_Mqtt.h</PathWithFileName>
-      <FilenameWithoutPath>srvLte_Mqtt.h</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>5</GroupNumber>
-      <FileNumber>38</FileNumber>
-      <FileType>8</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
       <PathWithFileName>..\Cat1\srvLte.cpp</PathWithFileName>
       <FilenameWithoutPath>srvLte.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
@@ -735,7 +711,7 @@
     </File>
     <File>
       <GroupNumber>5</GroupNumber>
-      <FileNumber>39</FileNumber>
+      <FileNumber>37</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>

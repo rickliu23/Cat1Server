@@ -4,7 +4,7 @@
 #include "stdbool.h"
 #include "stdint.h"
 #include "Fibocom_AT.h"
-#include "srvLte_Basic.h"
+#include "srvLte_Resource.h"
 #include "srvLte_Interface.h"
 #include "LteUartPort.h"
 
@@ -21,7 +21,6 @@ void clsLteIf::Init(void)
 {
     m_pInterfaceObj = clsLteInterfaceIf::GetInstance();
     m_pKeeperObj = clsLteKeeperIf::GetInstance();
-    m_pMqttObj = clsLteMqttIf::GetInstance();
 }
 
 void clsLteIf::Start(void)
@@ -38,8 +37,6 @@ void clsLteIf::Start(void)
 
     m_pKeeperObj->Init();
     m_pKeeperObj->Start();
-    
-    m_pMqttObj->Init();
 
     isEnabled = true;
 

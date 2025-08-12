@@ -7,7 +7,7 @@
 #include "stdlib.h"
 #include <stdio.h>
 
-#include "srvLte_Basic.h"
+#include "srvLte_Resource.h"
 #include "srvLte_Interface.h"
 #include "LteUartPort.h"
 

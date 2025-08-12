@@ -1,6 +1,6 @@
 #include "srvLte_Interface.h"
 #include <string.h>
-#include "srvLte_Basic.h"
+#include "srvLte_Resource.h"
 #include "LteUartPort.h"
 #include <stdio.h>
 
