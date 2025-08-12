@@ -13,13 +13,13 @@ extern "C" {
 #include "stdint.h"
 
 /*
-寻找s1字符串中的s2第一次出现的位置
+找出s1中第一次出现s2的位置
 如果不存在数值，返回NULL
 */
 char *my_strstr(const char *s1, int len, const char *s2);
 
 /*
-寻找s1字符串中的s2最后一次出现的位置
+找出s1中最后一次出现s2的位置
 如果不存在数值，返回NULL
 */
 char *my_strrstr(const char *s1, int len, const char *s2);
@@ -56,40 +56,42 @@ typedef struct
 /* 消息队列使用，当头指针或者尾指针无效时，置为 INVALID */
 #define LTE_INVALID_INDEX   (-1)
 
+/************************* 发送队列 *************************/
 #pragma pack(4)
 typedef struct
 {
+private:
     volatile bool m_isLock;
 
-    uint8_t m_msg[LTE_MSG_FIFO_MAX_COUNT][LTE_MSG_MAX_BYTES];
-    uint32_t m_msgLen[LTE_MSG_FIFO_MAX_COUNT];
-
-    /* 针对发送消息使用，不同的消息，预期回复时间有差异 */
-    int32_t m_timeout[LTE_MSG_FIFO_MAX_COUNT];
+    struct
+    {
+        uint8_t msg[LTE_MSG_MAX_BYTES];
+        uint32_t len;
+        /* 针对发送消息使用，不同的消息，预期回复时间有差异 */
+        int32_t timeout;
+    } m_buf[LTE_MSG_FIFO_MAX_COUNT];
 
     int32_t m_head;
     int32_t m_tail;
 
+public:
     void MsgInit(void);
 
-    // 针对接收消息队列
-    bool MsgPush(uint8_t *msg, uint32_t lenIn);
-    bool MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut);
-
-    // 针对发送消息队列
     bool MsgPush(uint8_t *msg, uint32_t lenIn, int32_t timeout_ms);
     bool MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut, int32_t &timeout_ms);
 
-} LteMsgFifoStructure; // 存放完整消息的buffer：放到这里的消息，一定是完整的，不存在粘包
+} LteMsgSendFifoStructure; // 存放完整消息：放到这里的消息，一定是完整的，不存在粘包
 #pragma pack()
 
+/************************* 接收队列 *************************/
 #pragma pack(4)
-typedef struct
+typedef struct : public LteMsgSendFifoStructure
 {
-    uint8_t msg[LTE_MSG_MAX_BYTES];
-    int32_t len;
-} LteMsgStructure;
+    bool MsgPush(uint8_t *msg, uint32_t lenIn);
+    bool MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut);
+} LteMsgRecvFifoStructure;
 #pragma pack()
+
 
 /************************************ 当前信息发送状态保存 ************************************/
 #pragma pack(4)
