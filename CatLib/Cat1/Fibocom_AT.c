@@ -34,9 +34,9 @@ char LTE_AT_MQTT[] = "MQTT";
 
 #if LTE_MQTT_ENABLE
 char LTE_AT_MQTT_USER[] = "MQTTUSER"; // set account and password
-char LTE_AT_MQTT_WILL[] = "MQTTWILL"; // 
+char LTE_AT_MQTT_WILL[] = "MQTTWILL"; //
 
-char LTE_AT_MQTT_OPEN[] = "MQTTOPEN"; // 
+char LTE_AT_MQTT_OPEN[] = "MQTTOPEN"; //
 char LTE_AT_MQTT_CLOSE[] = "MQTTCLOSE";
 char LTE_AT_MQTT_BREAK[] = "MQTTBREAK";
 
@@ -45,7 +45,7 @@ char LTE_AT_MQTT_UNSUB[] = "MQTTUMSUB"; // unsubscribe
 
 char LTE_AT_MQTT_PUB[] = "MQTTPUB"; // publish
 
-char LTE_AT_MQTT_MSG_RECV[] = "MQTTMSG"; // 
+char LTE_AT_MQTT_MSG_RECV[] = "MQTTMSG"; //
 
 /************************* MQTT CMD RSP *************************/
 
@@ -147,6 +147,62 @@ bool Fibocom_AT_Assemble_Basic(LTE_AT_INDEX id, LTE_AT_TYPE type, int param, cha
     {
         return false;
     }
+
+    *usefulLen = strlen(cmdBuf);
+
+    return true;
+}
+
+bool Fibocom_AT_Assemble_Mqtt(LTE_AT_INDEX id, char cmdBuf[], int bufMaxLen, int *usefulLen, char cnt, char params[][LTE_PARAM_MAX_LEN], char *data)
+{
+    memset(cmdBuf, 0, bufMaxLen);
+    *usefulLen = 0;
+
+    if(id == LTE_AT_INDEX_MQTT_USER)
+    {
+        sprintf(cmdBuf, "%s+%s=", LTE_AT_AT, LTE_AT_MQTT_USER);
+        *usefulLen = strlen(LTE_AT_AT) + strlen(LTE_AT_MQTT_USER) + 2;
+    }
+    else if(id == LTE_AT_INDEX_MQTT_OPEN)
+    {
+        sprintf(cmdBuf, "%s+%s=", LTE_AT_AT, LTE_AT_MQTT_OPEN);
+    }
+    else if(id == LTE_AT_INDEX_MQTT_CLOSE)
+    {
+        sprintf(cmdBuf, "%s+%s=\r\n", LTE_AT_AT, LTE_AT_MQTT_CLOSE);
+    }
+    else if(id == LTE_AT_INDEX_MQTT_BREAK)
+    {
+
+    }
+    else if(id == LTE_AT_INDEX_MQTT_SUB)
+    {
+
+    }
+    else if(id == LTE_AT_INDEX_MQTT_UNSUB)
+    {
+
+    }
+    else if(id == LTE_AT_INDEX_MQTT_PUB)
+    {
+
+    }
+    else
+    {
+        return false;
+    }
+
+    int i = 0;
+    while(i < cnt)
+    {
+        strcat(cmdBuf, params[i]);
+        if(i < cnt - 1)
+        {
+            strcat(cmdBuf, ",");
+        }
+        i++;
+    }
+    strcat(cmdBuf, "\r\n");
 
     *usefulLen = strlen(cmdBuf);
 

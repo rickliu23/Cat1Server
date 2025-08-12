@@ -21,6 +21,7 @@ void clsLteIf::Init(void)
 {
     m_pInterfaceObj = clsLteInterfaceIf::GetInstance();
     m_pKeeperObj = clsLteKeeperIf::GetInstance();
+    m_pMqttObj = clsLteMqttIf::GetInstance();
 }
 
 void clsLteIf::Start(void)
@@ -37,6 +38,8 @@ void clsLteIf::Start(void)
 
     m_pKeeperObj->Init();
     m_pKeeperObj->Start();
+    
+    m_pMqttObj->Init();
 
     isEnabled = true;
 
@@ -60,6 +63,11 @@ void clsLteIf::OnTimerFast(void)
     m_pKeeperObj->OnTimerFast();
 
     GetMsgAndProcess();
+
+    if (m_pKeeperObj->GetConnectedStatus())
+    {
+        
+    }
 }
 
 void clsLteIf::OnTimer(void)
@@ -77,6 +85,10 @@ void clsLteIf::OnTimer(void)
     {
         m_pInterfaceObj->MsgPush(Enum_LteNetInfo, (uint8_t *)m_CmdBuf, m_CmdBufLen, m_timeout);
     }
+
+    if (m_pKeeperObj->GetConnectedStatus())
+    {
+    }
 }
 
 void clsLteIf::OnTimerSlow(void)
@@ -88,6 +100,10 @@ void clsLteIf::OnTimerSlow(void)
 
     m_pInterfaceObj->OnTimerSlow();
     m_pKeeperObj->OnTimerSlow();
+
+    if (m_pKeeperObj->GetConnectedStatus())
+    {
+    }
 }
 
 

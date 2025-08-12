@@ -83,6 +83,14 @@ typedef struct
 } LteMsgFifoStructure; // 存放完整消息的buffer：放到这里的消息，一定是完整的，不存在粘包
 #pragma pack()
 
+#pragma pack(4)
+typedef struct
+{
+    uint8_t msg[LTE_MSG_MAX_BYTES];
+    int32_t len;
+} LteMsgStructure;
+#pragma pack()
+
 /************************************ 当前信息发送状态保存 ************************************/
 #pragma pack(4)
 typedef struct

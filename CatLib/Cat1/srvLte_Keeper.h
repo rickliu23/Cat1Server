@@ -88,6 +88,8 @@ public:
     // 收到消息，需要这个类来处理
     void MsgProcess(uint8_t *msg, uint32_t lenIn);
 
+    bool GetConnectedStatus() { return isConnected; }
+
 private:
     void Clear(void);
 
@@ -105,6 +107,8 @@ private:
     bool AT_RegProcess(uint8_t *msg, uint32_t lenIn);
 
 private:
+    bool isConnected; // whether is cat1 is connected to net
+
     LteMsgStatus m_msgStatus;
 
     LteModuleStatus m_moduleStatus; // 模块状态保存

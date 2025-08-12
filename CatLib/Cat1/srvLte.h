@@ -9,7 +9,8 @@ extern "C" {
 
 #include "srvLte_Interface.h"
 #include "srvLte_Keeper.h"
-
+#include "srvLte_Mqtt.h"
+    
 typedef enum
 {
     enum_lteKeeper = 0,
@@ -52,8 +53,11 @@ private:
 private:
     bool isEnabled; // 当前类的使能标志位，如果是false，代表用户不需要使用
 
+    
+
     clsLteInterfaceIf *m_pInterfaceObj;
     clsLteKeeperIf *m_pKeeperObj;
+    clsLteMqttIf *m_pMqttObj;
 
     // 数据暂存区
     uint8_t m_CmdBuf[LTE_MSG_MAX_BYTES];

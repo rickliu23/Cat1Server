@@ -48,8 +48,8 @@ public: // for state machine
 
 public: // for user
 
-    void SetUser(uint8_t *userName, uint8_t *password);
-    void Connect(void);
+    void SetUser(uint8_t *userName, uint8_t *password, uint8_t* clientID);
+    void Connect(uint8_t *remoteIpOrUrl, uint16_t remotePort, uint8_t CleansessionFlag, uint16_t keepAliveTime, uint8_t usetls);
     void Disconnect(void);
 
     void Subscribe(uint8_t *topic);
@@ -67,14 +67,10 @@ private:
     /* whether the connection is built succeed*/
     bool isConnected;
 
-    
-    LTE_AT_INDEX m_nowCmd;
+    LteMsgStatus m_msgStatus;
 
     // 针对用户多条数据发送时使用
     LteMsgFifoStructure m_msgFifo;
-
-    // mqtt id
-    uint8_t m_id;
 };
 
 /************************************ 模块MQTT维护类 ************************************/
@@ -107,9 +103,9 @@ public: // for state machine
     void MsgProcess(uint8_t *msg, uint32_t lenIn);
 
 public: // for user
-
     void SetUser(Enum_LteMqttConnID connID, uint8_t *userName, uint8_t nameLen, uint8_t *password, uint8_t passwordLen);
-
+    void Connect(Enum_LteMqttConnID connID, uint8_t *remoteIpOrUrl, uint16_t remotePort, uint8_t CleansessionFlag, uint16_t keepAliveTime, uint8_t usetls);
+    void Disconnect(Enum_LteMqttConnID connID);
 
 private:
     void Clear(void);
@@ -118,9 +114,9 @@ private:
 
     struct
     {
-        bool isUsed;
-        uint8_t id;
-        clsLteMqttConnIf connObj;
+        bool isUsed[2];
+        Enum_LteMqttConnID id[2];
+        clsLteMqttConnIf connObj[2];
     } m_connMngr;
 };
 

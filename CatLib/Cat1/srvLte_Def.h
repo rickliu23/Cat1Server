@@ -47,6 +47,8 @@ extern "C" {
 
 
 
+#define LTE_PARAM_MAX_LEN                   (64)
+
 #ifdef __cplusplus
 }
 #endif

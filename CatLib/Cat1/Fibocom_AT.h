@@ -65,6 +65,23 @@ typedef enum _LTE_AT_INDEX
     LTE_AT_INDEX_CSQ, // 查询信号强度
     LTE_AT_INDEX_NET_REG, // 网络注册
 
+    
+#if LTE_MQTT_ENABLE == 1
+
+    LTE_AT_INDEX_MQTT_USER,
+
+    LTE_AT_INDEX_MQTT_OPEN,
+    LTE_AT_INDEX_MQTT_CLOSE,
+    LTE_AT_INDEX_MQTT_BREAK,
+
+    LTE_AT_INDEX_MQTT_SUB,
+    LTE_AT_INDEX_MQTT_UNSUB,
+    LTE_AT_INDEX_MQTT_PUB,
+
+    LTE_AT_INDEX_MQTT_MSG_RECV,
+
+#endif
+
     // LTE_AT_INDEX_ATI,
     // LTE_AT_INDEX_FILE,
     // LTE_AT_INDEX_FILE_DEL,
@@ -116,8 +133,13 @@ typedef enum _LTE_AT_INDEX
     LTE_AT_INDEX_NUM
 } LTE_AT_INDEX;
 
+#define LTE_AT_REDUNDANCY               (50)
+
+#define LTE_AT_MQTT_USER_TIMEOUT_MS     (1000 + LTE_AT_REDUNDANCY)
+
 
 bool Fibocom_AT_Assemble_Basic(LTE_AT_INDEX id, LTE_AT_TYPE type, int param, char cmdBuf[], int bufMaxLen, int *usefulLen);
+bool Fibocom_AT_Assemble_Mqtt(LTE_AT_INDEX id, char cmdBuf[], int bufMaxLen, int *usefulLen, char cnt, char params[][LTE_PARAM_MAX_LEN], char *data);
 
 #ifdef __cplusplus
 }

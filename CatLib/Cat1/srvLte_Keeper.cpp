@@ -134,6 +134,8 @@ void clsLteKeeperIf::MsgProcess(uint8_t *msg, uint32_t lenIn)
 /************************************ private ************************************/
 void clsLteKeeperIf::Clear(void)
 {
+    isConnected = false;
+
     LteModuleStatus temp =
     {
         // flag  retryTimes  isPeriodically   periodLeft_s   Reloade:timeout   retryTimes  period_s
@@ -153,6 +155,8 @@ void clsLteKeeperIf::Clear(void)
 
 void clsLteKeeperIf::PowerOff(void)
 {
+    Clear();
+
     HW_LTE_Disable();
 }
 
@@ -264,6 +268,10 @@ void clsLteKeeperIf::WaitAndFindNextMsg(uint32_t time_ms)
         isFind = Fibocom_AT_Assemble_Basic(LTE_AT_INDEX_NET_REG, LTE_AT_READ, 0, (char *)m_msgStatus.msgBuf, sizeof(m_msgStatus.msgBuf), (int *)&m_msgStatus.msgLen);
 
         ptr = &m_moduleStatus.isReg;
+    }
+    else
+    {
+        isConnected = true; // connected if all flag are true
     }
 
     if(isFind)
