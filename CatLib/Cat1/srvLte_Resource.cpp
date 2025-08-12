@@ -3,8 +3,8 @@
 
 /******************************** 自定义的字符串搜索函数 ******************************************/
 
-// 找出s1中第一次出现s2的位置
 /*
+找出s1中第一次出现s2的位置
 s1: 搜寻范围
 len: s1的长度
 s2: 被搜索子串
@@ -38,8 +38,8 @@ char *my_strstr(const char *s1, int len, const char *s2)
     return NULL;
 }
 
-// 找出s1中最后一次出现s2的位置
 /*
+找出s1中最后一次出现s2的位置
 s1: 搜寻范围
 len: s1的长度
 s2: 被搜索子串
@@ -68,6 +68,11 @@ char *my_strrstr(const char *s1, int len, const char *s2)
     return last_occurrence;
 }
 
+/*
+寻找字符串中的第n个数值（）
+    例如，字符串为 99,55，寻找第一个数值时，返回99
+如果不存在数值，返回false
+*/
 bool find_nth_num(const char *s1, int lenIn, int nth, int &numOut)
 {
     if(nth <= 0)
@@ -253,33 +258,18 @@ bool LteRawFifoStructure::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut)
 
 /************************************ 消息队列 ************************************/
 
-void LteMsgFifoStructure::MsgInit(void)
+/************************* 发送队列 *************************/
+void LteMsgSendFifoStructure::MsgInit(void)
 {
     m_isLock = false;
 
-    memset(m_msg, 0, sizeof(m_msg));
-    memset(m_msgLen, 0, sizeof(m_msgLen));
-    memset(m_timeout, 0, sizeof(m_timeout));
+    memset(&m_buf, 0, sizeof(m_buf));
 
     m_head = 0;
     m_tail = LTE_INVALID_INDEX;
 }
 
-bool LteMsgFifoStructure::MsgPush(uint8_t *msg, uint32_t lenIn)
-{
-    int32_t timeout = 0;
-
-    return MsgPush(msg, lenIn, timeout);
-}
-
-bool LteMsgFifoStructure::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut)
-{
-    int32_t timeout = 0;
-
-    return MsgPop(msg, lenIn, lenOut, timeout);
-}
-
-bool LteMsgFifoStructure::MsgPush(uint8_t *msg, uint32_t lenIn, int32_t timeout_ms)
+bool LteMsgSendFifoStructure::MsgPush(uint8_t *msg, uint32_t lenIn, int32_t timeout_ms)
 {
     if(m_head == LTE_INVALID_INDEX || m_isLock == true)
     {
@@ -293,10 +283,10 @@ bool LteMsgFifoStructure::MsgPush(uint8_t *msg, uint32_t lenIn, int32_t timeout_
 
     m_isLock = true;
 
-    memcpy(m_msg + m_head, msg, lenIn);
-    m_msgLen[m_head] = lenIn;
-    m_timeout[m_head] = timeout_ms;
-
+    memcpy(m_buf[m_head].msg, msg, lenIn);
+    m_buf[m_head].len = lenIn;
+    m_buf[m_head].timeout = timeout_ms;
+    
     m_tail = m_tail == LTE_INVALID_INDEX ? m_head : m_tail;
 
     m_head += 1;
@@ -308,7 +298,7 @@ bool LteMsgFifoStructure::MsgPush(uint8_t *msg, uint32_t lenIn, int32_t timeout_
     return true;
 }
 
-bool LteMsgFifoStructure::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut, int32_t &timeout_ms)
+bool LteMsgSendFifoStructure::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut, int32_t &timeout_ms)
 {
     if(m_tail == LTE_INVALID_INDEX || m_isLock == true)
     {
@@ -326,9 +316,9 @@ bool LteMsgFifoStructure::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut,
 
     m_isLock = true;
 
-    memcpy(msg, m_msg[m_tail], m_msgLen[m_tail]);
-    lenOut = m_msgLen[m_tail];
-    timeout_ms = m_timeout[m_tail];
+    memcpy(msg, m_buf[m_tail].msg, m_buf[m_tail].len);
+    lenOut = m_buf[m_tail].len;
+    timeout_ms = m_buf[m_tail].timeout;
 
     m_head = m_head == LTE_INVALID_INDEX ? m_tail : m_head;
 
@@ -341,6 +331,20 @@ bool LteMsgFifoStructure::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut,
     return true;
 }
 
+/************************* 接收队列 *************************/
+bool LteMsgRecvFifoStructure::MsgPush(uint8_t *msg, uint32_t lenIn)
+{
+    int32_t timeout = 0;
+
+    return LteMsgSendFifoStructure::MsgPush(msg, lenIn, timeout);
+}
+
+bool LteMsgRecvFifoStructure::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut)
+{
+    int32_t timeout = 0;
+
+    return LteMsgSendFifoStructure::MsgPop(msg, lenIn, lenOut, timeout);
+}
 
 /************************************ 消息队列 END ************************************/
 

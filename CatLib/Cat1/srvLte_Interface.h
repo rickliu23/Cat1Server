@@ -70,13 +70,13 @@ private:
     LteRawFifoStructure m_rawData;
 
     // 存放接收的命令，此处存的是单条的数据，是拆包之后的
-    LteMsgFifoStructure m_recvFifo;
+    LteMsgRecvFifoStructure m_recvFifo;
 
     // 存放发送的命令，这里是基础数据，用来保障连接的，有最高优先级
-    LteMsgFifoStructure m_netSendFifo;
+    LteMsgSendFifoStructure m_netSendFifo;
 
     // 存放发送的命令，其它数据类型，比如MQTT之类，优先级低
-    LteMsgFifoStructure m_otherSendFifo;
+    LteMsgSendFifoStructure m_otherSendFifo;
 
     // 数据暂存区，用来从发送FIFO中获取命令
     uint8_t m_sendCmdBuf[LTE_MSG_MAX_BYTES];
