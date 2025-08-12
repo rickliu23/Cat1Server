@@ -191,10 +191,6 @@ bool LteRawFifoStructure::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut)
         // 起点下标
         startIndex = (uint32_t)pos - (uint32_t)m_array;
 
-//        char info[20];
-//        sprintf(info, "start: %d\r\n", startIndex);
-//        HW_Printf(info);
-
         // 剩余的有效字节数量
         int16_t lenLeft = (uint32_t)m_head - (uint32_t)(m_array) + startIndex;
 
@@ -228,9 +224,6 @@ bool LteRawFifoStructure::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut)
                 m_tail = endInedx;
             }
         }
-
-//        sprintf(info, "end: %d\r\n", endInedx);
-//        HW_Printf(info);
     }
     else // 无起点
     {
@@ -243,10 +236,6 @@ bool LteRawFifoStructure::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut)
     }
 
     m_isLock = false;
-
-//    char info[20];
-//    sprintf(info, "len: %d\r\n", lenOut);
-//    HW_Printf(info);
 
     if(lenOut)
     {
