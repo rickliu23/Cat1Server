@@ -63,9 +63,6 @@ private:
     void RawDataProcess(void);
 
 private:
-    // 只有在time out之后，才会去发送下一包数据
-    int32_t m_timeout;
-
     // buffer, 存放接收的数据用，此处存的是没拆包的数据
     LteRawFifoStructure m_rawData;
 
@@ -78,10 +75,15 @@ private:
     // 存放发送的命令，其它数据类型，比如MQTT之类，优先级低
     LteMsgSendFifoStructure m_otherSendFifo;
 
-    // 数据暂存区，用来从发送FIFO中获取命令
-    uint8_t m_sendCmdBuf[LTE_MSG_MAX_BYTES];
-    uint32_t m_sendCmdBufLen;
-    uint32_t timeout_ms;
+    // 数据暂存区，用来存储当前发送并且正在等待回复的命令
+    struct
+    {
+        LTE_AT_INDEX cmdType;
+        uint8_t cmdBuf[LTE_MSG_MAX_BYTES];
+        uint32_t bufLen;
+
+        int32_t timeout; // 只有在time out之后，才会去发送下一包数据
+    } m_operateCmd;
 
     // 数据暂存区，用来从接收FIFO中获取命令
     uint8_t m_recvCmdBuf[LTE_MSG_MAX_BYTES];

@@ -66,7 +66,7 @@ bool clsLteInterfaceIf::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut)
 /************************************ private ************************************/
 void clsLteInterfaceIf::Clear(void)
 {
-    m_timeout = 0;
+    m_operateCmd.timeout = 0;
 
     m_rawData.MsgInit();
 
@@ -80,27 +80,27 @@ void clsLteInterfaceIf::Clear(void)
 
 void clsLteInterfaceIf::SendDataProcess(uint32_t time_ms)
 {
-    if(m_timeout > 0)
+    if(m_operateCmd.timeout > 0)
     {
-        m_timeout -= time_ms;
+        m_operateCmd.timeout -= time_ms;
         return;
     }
 
-    if(m_netSendFifo.MsgPop(m_sendCmdBuf, LTE_MSG_MAX_BYTES, m_sendCmdBufLen, m_timeout) != true)
+    if(m_netSendFifo.MsgPop(m_operateCmd.cmdBuf, LTE_MSG_MAX_BYTES, m_operateCmd.bufLen, m_operateCmd.timeout) != true)
     {
-        if(m_otherSendFifo.MsgPop(m_sendCmdBuf, LTE_MSG_MAX_BYTES, m_sendCmdBufLen, m_timeout) != true)
+        if(m_otherSendFifo.MsgPop(m_operateCmd.cmdBuf, LTE_MSG_MAX_BYTES, m_operateCmd.bufLen, m_operateCmd.timeout) != true)
         {
             return;
         }
     }
 
     HW_Printf("Send cmd:\r\n");
-    for(int i = 0; i < m_sendCmdBufLen; i++)
+    for(int i = 0; i < m_operateCmd.bufLen; i++)
     {
-        HW_DEBUG_Transmit((uint8_t *)(m_sendCmdBuf + i), 1);
+        HW_DEBUG_Transmit((uint8_t *)(m_operateCmd.cmdBuf + i), 1);
     }
 
-    HW_UART_Transmit(m_sendCmdBuf, m_sendCmdBufLen);
+    HW_UART_Transmit(m_operateCmd.cmdBuf, m_operateCmd.bufLen);
 }
 
 void clsLteInterfaceIf::RawDataRecv(uint8_t *msg, uint32_t lenIn)
@@ -119,7 +119,6 @@ void clsLteInterfaceIf::RawDataProcess(void)
     // ²ð°ü
     while(m_rawData.MsgPop(m_recvCmdBuf, LTE_MSG_MAX_BYTES, m_recvCmdBufLen) == true)
     {
-
         HW_Printf("Recv cmd:\r\n");
         for(int i = 0; i < m_recvCmdBufLen; i++)
         {
