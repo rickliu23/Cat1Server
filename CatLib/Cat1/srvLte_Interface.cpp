@@ -43,22 +43,22 @@ void clsLteInterfaceIf::OnTimerSlow(void)
 
 }
 
-bool clsLteInterfaceIf::MsgPush(Enum_LteMsgType type, uint8_t *msg, uint32_t lenIn, int32_t timeout_ms)
+bool clsLteInterfaceIf::MsgPush(Enum_LteMsgType type, LTE_AT_INDEX cmdType, uint8_t *msg, uint32_t lenIn, int32_t timeout_ms)
 {
     if(type == Enum_LteNetInfo)
     {
-        return m_netSendFifo.MsgPush(msg, lenIn, timeout_ms);
+        return m_netSendFifo.MsgPush(cmdType, msg, lenIn, timeout_ms);
     }
     else
     {
-        return m_otherSendFifo.MsgPush(msg, lenIn, timeout_ms);
+        return m_otherSendFifo.MsgPush(cmdType, msg, lenIn, timeout_ms);
     }
 }
 
-bool clsLteInterfaceIf::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut)
+bool clsLteInterfaceIf::MsgPop(LTE_AT_INDEX &cmdType, uint8_t *msg, uint32_t lenIn, uint32_t &lenOut)
 {
     bool res;
-    res = m_recvFifo.MsgPop(msg, lenIn, lenOut);
+    res = m_recvFifo.MsgPop(cmdType, msg, lenIn, lenOut);
 
     return res;
 }
@@ -86,9 +86,9 @@ void clsLteInterfaceIf::SendDataProcess(uint32_t time_ms)
         return;
     }
 
-    if(m_netSendFifo.MsgPop(m_operateCmd.cmdBuf, LTE_MSG_MAX_BYTES, m_operateCmd.bufLen, m_operateCmd.timeout) != true)
+    if(m_netSendFifo.MsgPop(m_operateCmd.cmdType, m_operateCmd.cmdBuf, LTE_MSG_MAX_BYTES, m_operateCmd.bufLen, m_operateCmd.timeout) != true)
     {
-        if(m_otherSendFifo.MsgPop(m_operateCmd.cmdBuf, LTE_MSG_MAX_BYTES, m_operateCmd.bufLen, m_operateCmd.timeout) != true)
+        if(m_otherSendFifo.MsgPop(m_operateCmd.cmdType, m_operateCmd.cmdBuf, LTE_MSG_MAX_BYTES, m_operateCmd.bufLen, m_operateCmd.timeout) != true)
         {
             return;
         }
@@ -125,12 +125,20 @@ void clsLteInterfaceIf::RawDataProcess(void)
             HW_DEBUG_Transmit((uint8_t *)(m_recvCmdBuf + i), 1);
         }
 
+        // 做分类
+        cmdType = MsgClassify(m_recvCmdBuf, m_recvCmdBufLen);
+
         // 存到接收消息队列
-        if(m_recvFifo.MsgPush(m_recvCmdBuf, m_recvCmdBufLen) != true)
+        if(m_recvFifo.MsgPush(cmdType, m_recvCmdBuf, m_recvCmdBufLen) != true)
         {
             break;
         }
     }
+}
+
+LTE_AT_INDEX clsLteInterfaceIf::MsgClassify(uint8_t *msg, uint32_t lenIn)
+{
+    
 }
 
 /******************************** 基础状态维持函数 ******************************************/

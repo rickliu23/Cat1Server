@@ -48,8 +48,6 @@ private:
 
     void GetMsgAndProcess(void);
 
-    LTE_ENUM_MSG_TYPE MsgClassify(uint8_t *msg, uint32_t lenIn);
-
 private:
     bool isEnabled; // 当前类的使能标志位，如果是false，代表用户不需要使用
 
@@ -60,6 +58,7 @@ private:
 
 
     // 数据暂存区
+    LTE_AT_INDEX cmdType;
     uint8_t m_CmdBuf[LTE_MSG_MAX_BYTES];
     uint32_t m_CmdBufLen;
     int32_t m_timeout;

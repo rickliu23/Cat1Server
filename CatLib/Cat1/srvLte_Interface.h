@@ -45,9 +45,9 @@ public:
     void OnTimerSlow(void);
 
     // 要发送的数据，一律通过该函数塞进来
-    bool MsgPush(Enum_LteMsgType type, uint8_t *msg, uint32_t lenIn, int32_t timeout_ms);
+    bool MsgPush(Enum_LteMsgType type, LTE_AT_INDEX cmdType, uint8_t *msg, uint32_t lenIn, int32_t timeout_ms);
 
-    bool MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut);
+    bool MsgPop(LTE_AT_INDEX &cmdType, uint8_t *msg, uint32_t lenIn, uint32_t &lenOut);
 
 private:
     void Clear(void);
@@ -61,6 +61,8 @@ private:
 
     // 数据接收接收后，在此处拆包
     void RawDataProcess(void);
+
+    LTE_AT_INDEX MsgClassify(uint8_t *msg, uint32_t lenIn);
 
 private:
     // buffer, 存放接收的数据用，此处存的是没拆包的数据
@@ -82,10 +84,12 @@ private:
         uint8_t cmdBuf[LTE_MSG_MAX_BYTES];
         uint32_t bufLen;
 
-        int32_t timeout; // 只有在time out之后，才会去发送下一包数据
+        bool isRpyRecved; // 如果收到回复，立即结束等待
+        int32_t timeout; // 如果没收到回复，只有在time out之后，才会去发送下一包数据
     } m_operateCmd;
 
     // 数据暂存区，用来从接收FIFO中获取命令
+    LTE_AT_INDEX cmdType;
     uint8_t m_recvCmdBuf[LTE_MSG_MAX_BYTES];
     uint32_t m_recvCmdBufLen;
 

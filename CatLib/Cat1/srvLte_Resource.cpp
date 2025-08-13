@@ -258,7 +258,7 @@ void LteMsgSendFifoStructure::MsgInit(void)
     m_tail = LTE_INVALID_INDEX;
 }
 
-bool LteMsgSendFifoStructure::MsgPush(uint8_t *msg, uint32_t lenIn, int32_t timeout_ms)
+bool LteMsgSendFifoStructure::MsgPush(LTE_AT_INDEX cmdType, uint8_t *msg, uint32_t lenIn, int32_t timeout_ms)
 {
     if(m_head == LTE_INVALID_INDEX || m_isLock == true)
     {
@@ -287,7 +287,7 @@ bool LteMsgSendFifoStructure::MsgPush(uint8_t *msg, uint32_t lenIn, int32_t time
     return true;
 }
 
-bool LteMsgSendFifoStructure::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut, int32_t &timeout_ms)
+bool LteMsgSendFifoStructure::MsgPop(LTE_AT_INDEX &cmdType, uint8_t *msg, uint32_t lenIn, uint32_t &lenOut, int32_t &timeout_ms)
 {
     if(m_tail == LTE_INVALID_INDEX || m_isLock == true)
     {
@@ -321,18 +321,18 @@ bool LteMsgSendFifoStructure::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &len
 }
 
 /************************* 接收队列 *************************/
-bool LteMsgRecvFifoStructure::MsgPush(uint8_t *msg, uint32_t lenIn)
+bool LteMsgRecvFifoStructure::MsgPush(LTE_AT_INDEX cmdType, uint8_t *msg, uint32_t lenIn)
 {
     int32_t timeout = 0;
 
-    return LteMsgSendFifoStructure::MsgPush(msg, lenIn, timeout);
+    return LteMsgSendFifoStructure::MsgPush(cmdType, msg, lenIn, timeout);
 }
 
-bool LteMsgRecvFifoStructure::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut)
+bool LteMsgRecvFifoStructure::MsgPop(LTE_AT_INDEX &cmdType, uint8_t *msg, uint32_t lenIn, uint32_t &lenOut)
 {
     int32_t timeout = 0;
 
-    return LteMsgSendFifoStructure::MsgPop(msg, lenIn, lenOut, timeout);
+    return LteMsgSendFifoStructure::MsgPop(cmdType, msg, lenIn, lenOut, timeout);
 }
 
 /************************************ 消息队列 END ************************************/

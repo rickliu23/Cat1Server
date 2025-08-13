@@ -50,7 +50,7 @@ void clsLteKeeperIf::OnTimerSlow(void)
     ModuleStatusResetPeriodically(1);
 }
 
-bool clsLteKeeperIf::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut, int32_t &timeout_ms)
+bool clsLteKeeperIf::MsgPop(LTE_AT_INDEX &cmdType, uint8_t *msg, uint32_t lenIn, uint32_t &lenOut, int32_t &timeout_ms)
 {
     if(m_msgStatus.isWaitingForPop != true)
     {
@@ -74,7 +74,7 @@ bool clsLteKeeperIf::MsgPop(uint8_t *msg, uint32_t lenIn, uint32_t &lenOut, int3
     return true;
 }
 
-void clsLteKeeperIf::MsgProcess(uint8_t *msg, uint32_t lenIn)
+void clsLteKeeperIf::MsgProcess(LTE_AT_INDEX cmdType, uint8_t *msg, uint32_t lenIn)
 {
     if(m_msgStatus.nowCmd == LTE_AT_INDEX_UNKNOW && my_strstr((char *)msg, lenIn, LTE_AT_MODULE_READY_RSP))
     {
