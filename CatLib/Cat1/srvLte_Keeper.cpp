@@ -298,7 +298,7 @@ void clsLteKeeperIf::AT_CsqProcess(uint8_t *msg, uint32_t lenIn)
     int csq = 0;
     int8_t rssiValue;
 
-    if(my_strstr((char *)msg, lenIn, LTE_AT_CSQ_RSP) == NULL)
+    if(my_strstr((char *)msg, lenIn, LTE_AT_CSQ) == NULL)
     {
         return;
     }
@@ -345,7 +345,7 @@ void clsLteKeeperIf::AT_CsqProcess(uint8_t *msg, uint32_t lenIn)
 
 bool clsLteKeeperIf::AT_RegProcess(uint8_t *msg, uint32_t lenIn)
 {
-    if(my_strstr((char *)msg, lenIn, LTE_AT_REG_RSP) == NULL)
+    if(my_strstr((char *)msg, lenIn, LTE_AT_NET_REG) == NULL)
     {
         return false;
     }
