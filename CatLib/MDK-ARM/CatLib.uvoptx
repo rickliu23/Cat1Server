@@ -608,8 +608,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Cat1\Fibocom_AT.c</PathWithFileName>
-      <FilenameWithoutPath>Fibocom_AT.c</FilenameWithoutPath>
+      <PathWithFileName>..\Cat1\srvLte_Cat1Cmd.c</PathWithFileName>
+      <FilenameWithoutPath>srvLte_Cat1Cmd.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -620,8 +620,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Cat1\Fibocom_AT.h</PathWithFileName>
-      <FilenameWithoutPath>Fibocom_AT.h</FilenameWithoutPath>
+      <PathWithFileName>..\Cat1\srvLte_Cat1Cmd.h</PathWithFileName>
+      <FilenameWithoutPath>srvLte_Cat1Cmd.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

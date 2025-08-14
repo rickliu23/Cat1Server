@@ -3,7 +3,6 @@
 #include <stddef.h>
 #include "stdbool.h"
 #include "stdint.h"
-#include "Fibocom_AT.h"
 #include "srvLte_Resource.h"
 #include "srvLte_Interface.h"
 #include "LteUartPort.h"

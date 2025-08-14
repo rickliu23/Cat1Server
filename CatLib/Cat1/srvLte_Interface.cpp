@@ -80,10 +80,13 @@ void clsLteInterfaceIf::Clear(void)
 
 void clsLteInterfaceIf::SendDataProcess(uint32_t time_ms)
 {
-    if(m_operateCmd.timeout > 0)
+    if(!m_operateCmd.isRpyRecved)
     {
-        m_operateCmd.timeout -= time_ms;
-        return;
+        if(m_operateCmd.timeout > 0)
+        {
+            m_operateCmd.timeout -= time_ms;
+            return;
+        }
     }
 
     if(m_netSendFifo.MsgPop(m_operateCmd.cmdType, m_operateCmd.cmdBuf, LTE_MSG_MAX_BYTES, m_operateCmd.bufLen, m_operateCmd.timeout) != true)
@@ -100,6 +103,7 @@ void clsLteInterfaceIf::SendDataProcess(uint32_t time_ms)
         HW_DEBUG_Transmit((uint8_t *)(m_operateCmd.cmdBuf + i), 1);
     }
 
+    m_operateCmd.isRpyRecved = false;
     HW_UART_Transmit(m_operateCmd.cmdBuf, m_operateCmd.bufLen);
 }
 
@@ -138,7 +142,7 @@ void clsLteInterfaceIf::RawDataProcess(void)
 
 LTE_AT_INDEX clsLteInterfaceIf::MsgClassify(uint8_t *msg, uint32_t lenIn)
 {
-    
+
 }
 
 /******************************** »ù´¡×´Ì¬Î¬³Öº¯Êý ******************************************/

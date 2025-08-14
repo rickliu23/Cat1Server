@@ -539,14 +539,14 @@
               <FilePath>..\Cat1\srvLte_Type.h</FilePath>
             </File>
             <File>
-              <FileName>Fibocom_AT.c</FileName>
+              <FileName>srvLte_Cat1Cmd.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Cat1\Fibocom_AT.c</FilePath>
+              <FilePath>..\Cat1\srvLte_Cat1Cmd.c</FilePath>
             </File>
             <File>
-              <FileName>Fibocom_AT.h</FileName>
+              <FileName>srvLte_Cat1Cmd.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Cat1\Fibocom_AT.h</FilePath>
+              <FilePath>..\Cat1\srvLte_Cat1Cmd.h</FilePath>
             </File>
             <File>
               <FileName>srvLte_Resource.cpp</FileName>

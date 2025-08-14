@@ -10,7 +10,7 @@ extern "C" {
     
 #include "srvLte_Interface.h"
 
-#include "Fibocom_AT.h"
+#include "srvLte_Cat1Cmd.h"
 
 
 
