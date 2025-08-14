@@ -59,22 +59,22 @@ cmdBuf: store the cmd to this buffer
 bufMaxLen: max len of cmdBuf
 usefulLen: the len of cmdBuf which actually used
 */
-bool Lte_AT_Assemble_Basic(LTE_AT_INDEX id, LTE_AT_TYPE type, int param, char cmdBuf[], int bufMaxLen, int *usefulLen)
+bool Lte_AT_Assemble_Basic(LTE_AT_CMD_TYPE id, LTE_AT_OPERATION_TYPE type, int param, char cmdBuf[], int bufMaxLen, int *usefulLen)
 {
     memset(cmdBuf, 0, bufMaxLen);
     *usefulLen = 0;
 
-    if(id == LTE_AT_INDEX_AT)
+    if(id == LTE_AT_CMD_AT)
     {
         sprintf(cmdBuf, "%s\r\n", LTE_AT_AT);
     }
-    else if(id == LTE_AT_INDEX_ECHO)
+    else if(id == LTE_AT_CMD_ECHO)
     {
         if(param > 1)
             return NULL;
         sprintf(cmdBuf, "%s%s%d\r\n", LTE_AT_AT, LTE_AT_ECHO, param);
     }
-    else if(id == LTE_AT_INDEX_SIM_PIN)
+    else if(id == LTE_AT_CMD_SIM_PIN)
     {
         if(type == LTE_AT_READ)
             sprintf(cmdBuf, "%s+%s?\r\n", LTE_AT_AT, LTE_AT_SIM_PIN);
@@ -87,14 +87,14 @@ bool Lte_AT_Assemble_Basic(LTE_AT_INDEX id, LTE_AT_TYPE type, int param, char cm
         else if(type == LTE_AT_QUERY)
             sprintf(cmdBuf, "%s+%s=?\r\n", LTE_AT_AT, LTE_AT_SIM_PIN);
     }
-    else if(id == LTE_AT_INDEX_CSQ)
+    else if(id == LTE_AT_CMD_CSQ)
     {
         if(type == LTE_AT_READ)
             sprintf(cmdBuf, "%s+%s\r\n", LTE_AT_AT, LTE_AT_CSQ);
         else if(type == LTE_AT_QUERY)
             sprintf(cmdBuf, "%s+%s=?\r\n", LTE_AT_AT, LTE_AT_CSQ);
     }
-    else if(id == LTE_AT_INDEX_NET_REG)
+    else if(id == LTE_AT_CMD_NET_REG)
     {
         if(type == LTE_AT_READ)
             sprintf(cmdBuf, "%s+%s?\r\n", LTE_AT_AT, LTE_AT_NET_REG);

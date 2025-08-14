@@ -58,7 +58,7 @@ private:
 
 
     // Êý¾ÝÔÝ´æÇø
-    LTE_AT_INDEX cmdType;
+    LTE_AT_CMD_TYPE cmdType;
     uint8_t m_CmdBuf[LTE_MSG_MAX_BYTES];
     uint32_t m_CmdBufLen;
     int32_t m_timeout;

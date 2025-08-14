@@ -65,7 +65,7 @@ private:
 
     struct
     {
-        LTE_AT_INDEX cmdType;
+        LTE_AT_CMD_TYPE cmdType;
         uint8_t msg[LTE_MSG_MAX_BYTES];
         uint32_t len;
         /* 针对发送消息使用，不同的消息，预期回复时间有差异 */
@@ -78,8 +78,8 @@ private:
 public:
     void MsgInit(void);
 
-    bool MsgPush(LTE_AT_INDEX cmdType, uint8_t *msg, uint32_t lenIn, int32_t timeout_ms);
-    bool MsgPop(LTE_AT_INDEX &cmdType, uint8_t *msg, uint32_t lenIn, uint32_t &lenOut, int32_t &timeout_ms);
+    bool MsgPush(LTE_AT_CMD_TYPE cmdType, uint8_t *msg, uint32_t lenIn, int32_t timeout_ms);
+    bool MsgPop(LTE_AT_CMD_TYPE &cmdType, uint8_t *msg, uint32_t lenIn, uint32_t &lenOut, int32_t &timeout_ms);
 
 } LteMsgSendFifoStructure; // 存放完整消息：放到这里的消息，一定是完整的，不存在粘包
 #pragma pack()
@@ -88,8 +88,8 @@ public:
 #pragma pack(4)
 typedef struct : public LteMsgSendFifoStructure
 {
-    bool MsgPush(LTE_AT_INDEX cmdType, uint8_t *msg, uint32_t lenIn);
-    bool MsgPop(LTE_AT_INDEX &cmdType, uint8_t *msg, uint32_t lenIn, uint32_t &lenOut);
+    bool MsgPush(LTE_AT_CMD_TYPE cmdType, uint8_t *msg, uint32_t lenIn);
+    bool MsgPop(LTE_AT_CMD_TYPE &cmdType, uint8_t *msg, uint32_t lenIn, uint32_t &lenOut);
 } LteMsgRecvFifoStructure;
 #pragma pack()
 
@@ -101,7 +101,7 @@ typedef struct
     bool isWaitingForPop;
     bool isWaitingForReply;
 
-    LTE_AT_INDEX nowCmd;
+    LTE_AT_CMD_TYPE nowCmd;
     int32_t timeout;
 
     uint8_t msgBuf[LTE_MSG_MAX_BYTES];

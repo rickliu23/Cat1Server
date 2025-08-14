@@ -43,7 +43,7 @@ void clsLteInterfaceIf::OnTimerSlow(void)
 
 }
 
-bool clsLteInterfaceIf::MsgPush(Enum_LteMsgType type, LTE_AT_INDEX cmdType, uint8_t *msg, uint32_t lenIn, int32_t timeout_ms)
+bool clsLteInterfaceIf::MsgPush(Enum_LteMsgType type, LTE_AT_CMD_TYPE cmdType, uint8_t *msg, uint32_t lenIn, int32_t timeout_ms)
 {
     if(type == Enum_LteNetInfo)
     {
@@ -55,7 +55,7 @@ bool clsLteInterfaceIf::MsgPush(Enum_LteMsgType type, LTE_AT_INDEX cmdType, uint
     }
 }
 
-bool clsLteInterfaceIf::MsgPop(LTE_AT_INDEX &cmdType, uint8_t *msg, uint32_t lenIn, uint32_t &lenOut)
+bool clsLteInterfaceIf::MsgPop(LTE_AT_CMD_TYPE &cmdType, uint8_t *msg, uint32_t lenIn, uint32_t &lenOut)
 {
     bool res;
     res = m_recvFifo.MsgPop(cmdType, msg, lenIn, lenOut);
@@ -140,9 +140,9 @@ void clsLteInterfaceIf::RawDataProcess(void)
     }
 }
 
-LTE_AT_INDEX clsLteInterfaceIf::MsgClassify(uint8_t *msg, uint32_t lenIn)
+LTE_AT_CMD_TYPE clsLteInterfaceIf::MsgClassify(uint8_t *msg, uint32_t lenIn)
 {
-
+    return LTE_AT_CMD_UNKNOW;
 }
 
 /******************************** »ù´¡×´Ì¬Î¬³Öº¯Êý ******************************************/

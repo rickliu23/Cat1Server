@@ -82,10 +82,10 @@ public:
     void OnTimerSlow(void);
 
     // Regularly retrieve data from this class to determine if sending is required.
-    bool MsgPop(LTE_AT_INDEX &cmdType, uint8_t *msg, uint32_t lenIn, uint32_t &lenOut, int32_t &timeout_ms);
+    bool MsgPop(LTE_AT_CMD_TYPE &cmdType, uint8_t *msg, uint32_t lenIn, uint32_t &lenOut, int32_t &timeout_ms);
 
     // 收到消息，需要这个类来处理
-    void MsgProcess(LTE_AT_INDEX cmdType, uint8_t *msg, uint32_t lenIn);
+    void MsgProcess(LTE_AT_CMD_TYPE cmdType, uint8_t *msg, uint32_t lenIn);
 
     bool GetConnectedStatus() { return isConnected; }
 

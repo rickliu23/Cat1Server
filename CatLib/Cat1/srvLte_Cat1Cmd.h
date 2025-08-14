@@ -14,13 +14,13 @@ extern "C" {
     #define DECLARE_AT_COMMAND(name, value) extern const char name[]
 #endif
 
-typedef enum _LTE_AT_TYPE
+typedef enum
 {
     LTE_AT_READ,
     LTE_AT_WRITE,
     LTE_AT_QUERY,
     LTE_AT_NUM
-} LTE_AT_TYPE;
+} LTE_AT_OPERATION_TYPE;
 
 /* CMD */
 DECLARE_AT_COMMAND(LTE_AT_AT, "AT");
@@ -39,29 +39,29 @@ DECLARE_AT_COMMAND(LTE_AT_ERR_RSP, "ERROR");
 DECLARE_AT_COMMAND(LTE_AT_READY_RSP, "READY");
 
 
-typedef enum _LTE_AT_INDEX
+typedef enum
 {
-		LTE_AT_INDEX_UNKNOW,
-    LTE_AT_INDEX_AT, //test AT communication
-    LTE_AT_INDEX_ECHO, // echo on/off
-    LTE_AT_INDEX_ATI, // get module info
-    LTE_AT_INDEX_CSQ, // get signal quality
-    LTE_AT_INDEX_FUNC, // flight mode on/off
-    LTE_AT_INDEX_SIM_PIN, // check SIM card status
-    LTE_AT_INDEX_NET_REG, // network registration status
+    LTE_AT_CMD_UNKNOW,
+    LTE_AT_CMD_AT, //test AT communication
+    LTE_AT_CMD_ECHO, // echo on/off
+    LTE_AT_CMD_ATI, // get module info
+    LTE_AT_CMD_CSQ, // get signal quality
+    LTE_AT_CMD_FUNC, // flight mode on/off
+    LTE_AT_CMD_SIM_PIN, // check SIM card status
+    LTE_AT_CMD_NET_REG, // network registration status
 
     
-    LTE_AT_INDEX_CALL,
-    LTE_AT_INDEX_UNCALL,
+    LTE_AT_CMD_CALL,
+    LTE_AT_CMD_UNCALL,
 
 
 
-    LTE_AT_INDEX_NUM
-} LTE_AT_INDEX;
+    LTE_AT_CMD_NUM
+} LTE_AT_CMD_TYPE;
 
 
 
-bool Lte_AT_Assemble_Basic(LTE_AT_INDEX id, LTE_AT_TYPE type, int param, char cmdBuf[], int bufMaxLen, int *usefulLen);
+bool Lte_AT_Assemble_Basic(LTE_AT_CMD_TYPE id, LTE_AT_OPERATION_TYPE type, int param, char cmdBuf[], int bufMaxLen, int *usefulLen);
 //// 公共结构体定义
 //typedef struct  {
 //    _LTE_AT_INDEX at_index;
@@ -80,7 +80,7 @@ bool Lte_AT_Assemble_Basic(LTE_AT_INDEX id, LTE_AT_TYPE type, int param, char cm
 
 //// 全局配置实例（宏控制定义或声明）
 //EXTERN GlobalConfig g_config INIT({
-//    .at_index = LTE_AT_INDEX_AT, 
+//    .at_index = LTE_AT_CMD_AT, 
 //    .timeout = 5.0,
 //    .server_name = "default"
 //});
