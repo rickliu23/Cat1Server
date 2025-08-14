@@ -534,11 +534,6 @@
               <FilePath>..\Cat1\srvLte_Def.h</FilePath>
             </File>
             <File>
-              <FileName>srvLte_Type.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Cat1\srvLte_Type.h</FilePath>
-            </File>
-            <File>
               <FileName>srvLte_Cat1Cmd.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Cat1\srvLte_Cat1Cmd.c</FilePath>

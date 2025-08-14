@@ -5,7 +5,6 @@
 extern "C" {
 #endif
 
-#include "srvLte_Type.h"
 #include "srvLte_Def.h"
 #include "srvLte_Resource.h"
 
