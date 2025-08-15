@@ -199,14 +199,17 @@ LTE_AT_CMD_TYPE clsLteInterfaceIf::MsgClassify(LTE_AT_CMD_TYPE cmdNow, uint8_t *
         }
     }
 
-    for(int i = LTE_AT_CMD_MODULE_READY_RSP; i < LTE_AT_CMD_NUM; i++)
+    for(int i = LTE_AT_CMD_AT; i < LTE_AT_CMD_NUM; i++)
     {
-        if(my_strstr((char *)msg, lenIn, Lte_AT_Response_Table[i].data_rsp))
+        if (Lte_AT_Response_Table[i].data_rsp != NULL)
         {
-            return Lte_AT_Response_Table[i].cmd_id;
+            if(my_strstr((char *)msg, lenIn, Lte_AT_Response_Table[i].data_rsp))
+            {
+                return Lte_AT_Response_Table[i].cmd_id;
+            }
         }
     }
-    
+
     return LTE_AT_CMD_UNKNOW;
 }
 
