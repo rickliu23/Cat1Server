@@ -77,7 +77,7 @@ void clsLteInterfaceIf::Clear(void)
 
 void clsLteInterfaceIf::SendDataProcess(uint32_t time_ms)
 {
-    if(!m_operateCmd.isRpyRecved) // wait for reply now
+    if(m_operateCmd.isWaitingReply) // wait for reply now
     {
         if(m_operateCmd.timeout > 0) // wait until timeout
         {
@@ -101,7 +101,7 @@ void clsLteInterfaceIf::SendDataProcess(uint32_t time_ms)
         HW_DEBUG_Transmit((uint8_t *)(m_operateCmd.cmdBuf + i), 1);
     }
 
-    m_operateCmd.isRpyRecved = false;
+    m_operateCmd.isWaitingReply = true;
     HW_UART_Transmit(m_operateCmd.cmdBuf, m_operateCmd.bufLen);
 }
 
@@ -170,7 +170,7 @@ void clsLteInterfaceIf::RawDataProcess(void)
         
         if (m_operateCmd.cmdType == cmdType)
         {
-            m_operateCmd.isRpyRecved = true;
+            m_operateCmd.isWaitingReply = false;
         }
     }
 }

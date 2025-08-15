@@ -83,7 +83,7 @@ private:
         uint8_t cmdBuf[LTE_MSG_MAX_BYTES];
         uint32_t bufLen;
 
-        bool isRpyRecved; // 如果收到回复，立即结束等待
+        bool isWaitingReply; // 如果收到回复，立即结束等待
         int32_t timeout; // 如果没收到回复，只有在time out之后，才会去发送下一包数据
     } m_operateCmd;
 
