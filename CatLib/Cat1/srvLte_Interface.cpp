@@ -124,12 +124,6 @@ void clsLteInterfaceIf::RawDataProcess(void)
     // 拆包
     while(m_rawData.MsgPop(m_recvCmdBuf, LTE_MSG_MAX_BYTES, m_recvCmdBufLen) == true)
     {
-        HW_Printf("Recv cmd:\r\n");
-        for(int i = 0; i < m_recvCmdBufLen; i++)
-        {
-            HW_DEBUG_Transmit((uint8_t *)(m_recvCmdBuf + i), 1);
-        }
-
         // 做分类
         cmdType = MsgClassify(m_operateCmd.cmdType, m_recvCmdBuf, m_recvCmdBufLen);
         if (cmdType == LTE_AT_CMD_AT)
@@ -165,6 +159,12 @@ void clsLteInterfaceIf::RawDataProcess(void)
             HW_Printf("Recv type: LTE_AT_CMD_MODULE_READY_RSP\r\n");
         }
         
+        HW_Printf("Recv cmd:\r\n");
+        for(int i = 0; i < m_recvCmdBufLen; i++)
+        {
+            HW_DEBUG_Transmit((uint8_t *)(m_recvCmdBuf + i), 1);
+        }
+
         // 存到接收消息队列
         if(m_recvFifo.MsgPush(cmdType, m_recvCmdBuf, m_recvCmdBufLen) != true)
         {
@@ -206,6 +206,8 @@ LTE_AT_CMD_TYPE clsLteInterfaceIf::MsgClassify(LTE_AT_CMD_TYPE cmdNow, uint8_t *
             return Lte_AT_Response_Table[i].cmd_id;
         }
     }
+    
+    return LTE_AT_CMD_UNKNOW;
 }
 
 /******************************** 基础状态维持函数 ******************************************/

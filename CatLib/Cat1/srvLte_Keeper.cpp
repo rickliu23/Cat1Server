@@ -77,59 +77,93 @@ bool clsLteKeeperIf::MsgPop(LTE_AT_CMD_TYPE &cmdType, uint8_t *msg, uint32_t len
 
 void clsLteKeeperIf::MsgProcess(LTE_AT_CMD_TYPE cmdType, uint8_t *msg, uint32_t lenIn)
 {
-    if(m_msgStatus.nowCmd == LTE_AT_CMD_UNKNOW && my_strstr((char *)msg, lenIn, LTE_AT_MODULE_READY_RSP))
+    if(m_msgStatus.nowCmd == cmdType)
     {
-        m_moduleStatus.isPowerOn.flag = true;
-    }
-    else if(m_msgStatus.nowCmd == LTE_AT_CMD_AT)
-    {
-        if(my_strstr((char *)msg, lenIn, LTE_AT_OK_RSP))
-        {
-            m_moduleStatus.isModuleReachable.flag = true;
-            m_moduleStatus.isModuleReachable.retryTimesLeft = m_moduleStatus.isModuleReachable.retryTimesReloadValue;
-        }
-    }
-    else if(m_msgStatus.nowCmd == LTE_AT_CMD_ECHO && my_strstr((char *)msg, lenIn, LTE_AT_OK_RSP))
-    {
-        if(my_strstr((char *)msg, lenIn, LTE_AT_OK_RSP))
-        {
-            m_moduleStatus.isEchoOn.flag = true;
-            m_moduleStatus.isEchoOn.retryTimesLeft = m_moduleStatus.isEchoOn.retryTimesReloadValue;
-        }
-    }
-    else if(m_msgStatus.nowCmd == LTE_AT_CMD_SIM_PIN)
-    {
-        if(my_strstr((char *)msg, lenIn, LTE_AT_READY_RSP))
-        {
-            m_moduleStatus.isSimExist.flag = true;
-            m_moduleStatus.isSimExist.retryTimesLeft = m_moduleStatus.isSimExist.retryTimesReloadValue;
-            m_moduleStatus.isSimExist.periodLeft_s = m_moduleStatus.isSimExist.periodReloadValue_s;
-        }
-    }
-    else if(m_msgStatus.nowCmd == LTE_AT_CMD_CSQ)
-    {
-        AT_CsqProcess(msg, lenIn);
-
-        if(m_moduleStatus.rssi.level == LTE_RSSI_LEVEL_0 || m_moduleStatus.rssi.level == LTE_RSSI_LEVEL_1
-                || m_moduleStatus.rssi.level == LTE_RSSI_LEVEL_2 || m_moduleStatus.rssi.level == LTE_RSSI_LEVEL_3
-          )
-        {
-            m_moduleStatus.isCSQ.flag = true;
-            m_moduleStatus.isCSQ.retryTimesLeft = m_moduleStatus.isCSQ.retryTimesReloadValue;
-            m_moduleStatus.isCSQ.periodLeft_s = m_moduleStatus.isCSQ.periodReloadValue_s;
-        }
-    }
-    else if(m_msgStatus.nowCmd == LTE_AT_CMD_NET_REG)
-    {
-        if(AT_RegProcess(msg, lenIn) == true)
-        {
-            m_moduleStatus.isReg.flag = true;
-            m_moduleStatus.isReg.retryTimesLeft = m_moduleStatus.isReg.retryTimesReloadValue;
-            m_moduleStatus.isReg.periodLeft_s = m_moduleStatus.isReg.periodReloadValue_s;
-        }
+        m_msgStatus.isWaitingForReply = false;
     }
 
-    m_msgStatus.nowCmd = LTE_AT_CMD_UNKNOW;
+    switch(cmdType)
+    {
+        case LTE_AT_CMD_AT:
+        {
+            if(my_strstr((char *)msg, lenIn, LTE_AT_OK_RSP))
+            {
+                m_moduleStatus.isModuleReachable.flag = true;
+                m_moduleStatus.isModuleReachable.retryTimesLeft = m_moduleStatus.isModuleReachable.retryTimesReloadValue;
+            }
+        }
+        break;
+
+        case LTE_AT_CMD_ECHO:
+        {
+            if(my_strstr((char *)msg, lenIn, LTE_AT_OK_RSP))
+            {
+                m_moduleStatus.isEchoOn.flag = true;
+                m_moduleStatus.isEchoOn.retryTimesLeft = m_moduleStatus.isEchoOn.retryTimesReloadValue;
+            }
+        }
+        break;
+
+        case LTE_AT_CMD_ATI:
+        {
+        }
+        break;
+
+        case LTE_AT_CMD_SIM_PIN:
+        {
+            if(my_strstr((char *)msg, lenIn, LTE_AT_READY_RSP))
+            {
+                m_moduleStatus.isSimExist.flag = true;
+                m_moduleStatus.isSimExist.retryTimesLeft = m_moduleStatus.isSimExist.retryTimesReloadValue;
+                m_moduleStatus.isSimExist.periodLeft_s = m_moduleStatus.isSimExist.periodReloadValue_s;
+            }
+        }
+        break;
+
+        case LTE_AT_CMD_CSQ:
+        {
+            AT_CsqProcess(msg, lenIn);
+
+            if(m_moduleStatus.rssi.level == LTE_RSSI_LEVEL_0 || m_moduleStatus.rssi.level == LTE_RSSI_LEVEL_1
+                    || m_moduleStatus.rssi.level == LTE_RSSI_LEVEL_2 || m_moduleStatus.rssi.level == LTE_RSSI_LEVEL_3
+              )
+            {
+                m_moduleStatus.isCSQ.flag = true;
+                m_moduleStatus.isCSQ.retryTimesLeft = m_moduleStatus.isCSQ.retryTimesReloadValue;
+                m_moduleStatus.isCSQ.periodLeft_s = m_moduleStatus.isCSQ.periodReloadValue_s;
+            }
+        }
+        break;
+
+        case LTE_AT_CMD_NET_REG:
+        {
+            if(AT_RegProcess(msg, lenIn) == true)
+            {
+                m_moduleStatus.isReg.flag = true;
+                m_moduleStatus.isReg.retryTimesLeft = m_moduleStatus.isReg.retryTimesReloadValue;
+                m_moduleStatus.isReg.periodLeft_s = m_moduleStatus.isReg.periodReloadValue_s;
+            }
+        }
+        break;
+
+        case LTE_AT_CMD_CALL:
+        {
+        }
+        break;
+
+        case LTE_AT_CMD_MODULE_READY_RSP:
+        {
+            if(my_strstr((char *)msg, lenIn, LTE_AT_MODULE_READY_RSP))
+            {
+                m_moduleStatus.isPowerOn.flag = true;
+            }
+        }
+        break;
+
+        default:
+        {
+        };
+    }
 }
 
 /************************************ private ************************************/

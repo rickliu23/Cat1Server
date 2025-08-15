@@ -23,8 +23,8 @@ typedef enum
     LTE_AT_CMD_AT, //test AT communication
     LTE_AT_CMD_ECHO, // echo on/off
     LTE_AT_CMD_ATI, // get module info
-    LTE_AT_CMD_CSQ, // get signal quality
     LTE_AT_CMD_SIM_PIN, // check SIM card status
+    LTE_AT_CMD_CSQ, // get signal quality
     LTE_AT_CMD_NET_REG, // network registration status
     LTE_AT_CMD_CALL,
 
