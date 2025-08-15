@@ -61,7 +61,7 @@ private:
     // 数据接收接收后，在此处拆包
     void RawDataProcess(void);
 
-    LTE_AT_CMD_TYPE MsgClassify(uint8_t *msg, uint32_t lenIn);
+    LTE_AT_CMD_TYPE MsgClassify(LTE_AT_CMD_TYPE cmdNow, uint8_t *msg, uint32_t lenIn);
 
 private:
     // buffer, 存放接收的数据用，此处存的是没拆包的数据

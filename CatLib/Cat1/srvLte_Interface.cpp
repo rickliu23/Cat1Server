@@ -80,20 +80,21 @@ void clsLteInterfaceIf::Clear(void)
 
 void clsLteInterfaceIf::SendDataProcess(uint32_t time_ms)
 {
-    if(!m_operateCmd.isRpyRecved)
+    if(!m_operateCmd.isRpyRecved) // wait for reply now
     {
-        if(m_operateCmd.timeout > 0)
+        if(m_operateCmd.timeout > 0) // wait until timeout
         {
             m_operateCmd.timeout -= time_ms;
             return;
         }
     }
 
+    // try to find message
     if(m_netSendFifo.MsgPop(m_operateCmd.cmdType, m_operateCmd.cmdBuf, LTE_MSG_MAX_BYTES, m_operateCmd.bufLen, m_operateCmd.timeout) != true)
     {
         if(m_otherSendFifo.MsgPop(m_operateCmd.cmdType, m_operateCmd.cmdBuf, LTE_MSG_MAX_BYTES, m_operateCmd.bufLen, m_operateCmd.timeout) != true)
         {
-            return;
+            return; // return when there are no messages to send
         }
     }
 
@@ -130,8 +131,40 @@ void clsLteInterfaceIf::RawDataProcess(void)
         }
 
         // 做分类
-        cmdType = MsgClassify(m_recvCmdBuf, m_recvCmdBufLen);
-
+        cmdType = MsgClassify(m_operateCmd.cmdType, m_recvCmdBuf, m_recvCmdBufLen);
+        if (cmdType == LTE_AT_CMD_AT)
+        {
+            HW_Printf("Recv type: LTE_AT_CMD_AT\r\n");
+        }
+        else if (cmdType == LTE_AT_CMD_ECHO)
+        {
+            HW_Printf("Recv type: LTE_AT_CMD_ECHO\r\n");
+        }
+        else if (cmdType == LTE_AT_CMD_ATI)
+        {
+            HW_Printf("Recv type: LTE_AT_CMD_ATI\r\n");
+        }
+        else if (cmdType == LTE_AT_CMD_CSQ)
+        {
+            HW_Printf("Recv type: LTE_AT_CMD_CSQ\r\n");
+        }
+        else if (cmdType == LTE_AT_CMD_SIM_PIN)
+        {
+            HW_Printf("Recv type: LTE_AT_CMD_SIM_PIN\r\n");
+        }
+        else if (cmdType == LTE_AT_CMD_NET_REG)
+        {
+            HW_Printf("Recv type: LTE_AT_CMD_NET_REG\r\n");
+        }
+        else if (cmdType == LTE_AT_CMD_CALL)
+        {
+            HW_Printf("Recv type: LTE_AT_CMD_CALL\r\n");
+        }
+        else if (cmdType == LTE_AT_CMD_MODULE_READY_RSP)
+        {
+            HW_Printf("Recv type: LTE_AT_CMD_MODULE_READY_RSP\r\n");
+        }
+        
         // 存到接收消息队列
         if(m_recvFifo.MsgPush(cmdType, m_recvCmdBuf, m_recvCmdBufLen) != true)
         {
@@ -140,9 +173,39 @@ void clsLteInterfaceIf::RawDataProcess(void)
     }
 }
 
-LTE_AT_CMD_TYPE clsLteInterfaceIf::MsgClassify(uint8_t *msg, uint32_t lenIn)
+LTE_AT_CMD_TYPE clsLteInterfaceIf::MsgClassify(LTE_AT_CMD_TYPE cmdNow, uint8_t *msg, uint32_t lenIn)
 {
-    return LTE_AT_CMD_UNKNOW;
+    if(Lte_AT_Response_Table[cmdNow].ok_rsp != NULL)
+    {
+        if(my_strstr((char *)msg, lenIn, Lte_AT_Response_Table[cmdNow].ok_rsp))
+        {
+            return cmdNow;
+        }
+    }
+
+    if(Lte_AT_Response_Table[cmdNow].err_rsp != NULL)
+    {
+        if(my_strstr((char *)msg, lenIn, Lte_AT_Response_Table[cmdNow].err_rsp))
+        {
+            return cmdNow;
+        }
+    }
+
+    if(Lte_AT_Response_Table[cmdNow].data_rsp != NULL)
+    {
+        if(my_strstr((char *)msg, lenIn, Lte_AT_Response_Table[cmdNow].data_rsp))
+        {
+            return cmdNow;
+        }
+    }
+
+    for(int i = LTE_AT_CMD_MODULE_READY_RSP; i < LTE_AT_CMD_NUM; i++)
+    {
+        if(my_strstr((char *)msg, lenIn, Lte_AT_Response_Table[i].data_rsp))
+        {
+            return Lte_AT_Response_Table[i].cmd_id;
+        }
+    }
 }
 
 /******************************** 基础状态维持函数 ******************************************/

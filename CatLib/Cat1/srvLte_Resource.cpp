@@ -272,6 +272,7 @@ bool LteMsgSendFifoStructure::MsgPush(LTE_AT_CMD_TYPE cmdType, uint8_t *msg, uin
 
     m_isLock = true;
 
+    m_buf[m_head].cmdType = cmdType;
     memcpy(m_buf[m_head].msg, msg, lenIn);
     m_buf[m_head].len = lenIn;
     m_buf[m_head].timeout = timeout_ms;
@@ -305,6 +306,7 @@ bool LteMsgSendFifoStructure::MsgPop(LTE_AT_CMD_TYPE &cmdType, uint8_t *msg, uin
 
     m_isLock = true;
 
+    cmdType = m_buf[m_tail].cmdType;
     memcpy(msg, m_buf[m_tail].msg, m_buf[m_tail].len);
     lenOut = m_buf[m_tail].len;
     timeout_ms = m_buf[m_tail].timeout;

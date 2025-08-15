@@ -64,6 +64,7 @@ bool clsLteKeeperIf::MsgPop(LTE_AT_CMD_TYPE &cmdType, uint8_t *msg, uint32_t len
 
     m_msgStatus.isWaitingForPop = false;
 
+    cmdType = m_msgStatus.nowCmd;
     memcpy(msg, m_msgStatus.msgBuf, m_msgStatus.msgLen);
     lenOut = m_msgStatus.msgLen;
     timeout_ms = m_msgStatus.timeout;

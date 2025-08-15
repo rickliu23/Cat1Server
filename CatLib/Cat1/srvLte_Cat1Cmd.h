@@ -17,18 +17,19 @@ extern "C" {
 
 typedef enum
 {
-    LTE_AT_CMD_UNKNOW,
+    LTE_AT_CMD_UNKNOW = 0,
+    
+    // Command-Driven Queries
     LTE_AT_CMD_AT, //test AT communication
     LTE_AT_CMD_ECHO, // echo on/off
     LTE_AT_CMD_ATI, // get module info
     LTE_AT_CMD_CSQ, // get signal quality
-    LTE_AT_CMD_FUNC, // flight mode on/off
     LTE_AT_CMD_SIM_PIN, // check SIM card status
     LTE_AT_CMD_NET_REG, // network registration status
-
-
     LTE_AT_CMD_CALL,
-    LTE_AT_CMD_UNCALL,
+
+    // Event-Driven Notifications
+    LTE_AT_CMD_MODULE_READY_RSP,
 
     LTE_AT_CMD_NUM
 } LTE_AT_CMD_TYPE;
@@ -75,15 +76,19 @@ typedef struct
 
 #ifdef DEFINE_LTE_AT_COMMANDS
 #define DECLARE_CMD_REGISTRY(id, str, ok, err, data) \
-    {id, str, ok, err, data}
+    [id] = {id, str, ok, err, data}
 
 const Lte_AT_Response_Table_TYPE Lte_AT_Response_Table[] = 
 {
+    // Command-Driven Queries
     DECLARE_CMD_REGISTRY(LTE_AT_CMD_AT, LTE_AT_AT, LTE_AT_OK_RSP, NULL, NULL),
     DECLARE_CMD_REGISTRY(LTE_AT_CMD_ECHO, LTE_AT_ECHO, LTE_AT_OK_RSP, LTE_AT_ERR_RSP, NULL),
     DECLARE_CMD_REGISTRY(LTE_AT_CMD_SIM_PIN, LTE_AT_SIM_PIN, LTE_AT_OK_RSP, LTE_AT_ERR_RSP, LTE_AT_SIM_PIN),
     DECLARE_CMD_REGISTRY(LTE_AT_CMD_CSQ, LTE_AT_CSQ, NULL, NULL, LTE_AT_CSQ),
-    DECLARE_CMD_REGISTRY(LTE_AT_CMD_NET_REG, LTE_AT_NET_REG, LTE_AT_OK_RSP, LTE_AT_ERR_RSP, LTE_AT_NET_REG)
+    DECLARE_CMD_REGISTRY(LTE_AT_CMD_NET_REG, LTE_AT_NET_REG, LTE_AT_OK_RSP, LTE_AT_ERR_RSP, LTE_AT_NET_REG), 
+
+    // Event-Driven Notifications
+    DECLARE_CMD_REGISTRY(LTE_AT_CMD_MODULE_READY_RSP, NULL, NULL, NULL, LTE_AT_MODULE_READY_RSP), 
 };
 
 const int Lte_AT_Response_Table_Size = sizeof(Lte_AT_Response_Table)/sizeof(Lte_AT_Response_Table_TYPE);
