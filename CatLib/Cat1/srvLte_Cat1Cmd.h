@@ -51,9 +51,10 @@ DECLARE_AT_COMMAND(LTE_AT_NET_REG, "CEREG");
 
 
 /************************* RSP *************************/
-// 模块复位结束之后主动发送该指令
-DECLARE_AT_COMMAND(LTE_AT_MODULE_READY_RSP, "AT command ready");
+// 模块主动发送
+DECLARE_AT_COMMAND(LTE_AT_MODULE_READY_RSP, "AT command ready"); // 复位结束之后主动发送该指令
 
+// 模块被动回复
 DECLARE_AT_COMMAND(LTE_AT_OK_RSP, "OK");
 DECLARE_AT_COMMAND(LTE_AT_ERR_RSP, "ERROR");
 DECLARE_AT_COMMAND(LTE_AT_READY_RSP, "READY");

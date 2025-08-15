@@ -57,10 +57,7 @@ bool clsLteInterfaceIf::MsgPush(Enum_LteMsgType type, LTE_AT_CMD_TYPE cmdType, u
 
 bool clsLteInterfaceIf::MsgPop(LTE_AT_CMD_TYPE &cmdType, uint8_t *msg, uint32_t lenIn, uint32_t &lenOut)
 {
-    bool res;
-    res = m_recvFifo.MsgPop(cmdType, msg, lenIn, lenOut);
-
-    return res;
+    return m_recvFifo.MsgPop(cmdType, msg, lenIn, lenOut);
 }
 
 /************************************ private ************************************/
@@ -169,6 +166,11 @@ void clsLteInterfaceIf::RawDataProcess(void)
         if(m_recvFifo.MsgPush(cmdType, m_recvCmdBuf, m_recvCmdBufLen) != true)
         {
             break;
+        }
+        
+        if (m_operateCmd.cmdType == cmdType)
+        {
+            m_operateCmd.isRpyRecved = true;
         }
     }
 }
